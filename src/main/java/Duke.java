@@ -32,7 +32,7 @@ public class Duke {
             }
 
             System.out.println(divider);
-            
+
             if (input.equalsIgnoreCase("list")) {
                 System.out.println(" Here are the tasks in your list:");
                 for (int i = 0; i < tasks.size(); i++) {
@@ -66,12 +66,39 @@ public class Duke {
                 } catch (NumberFormatException e) {
                     System.out.println(" Please provide a valid task number to unmark.");
                 }
-            } else if (!input.isEmpty()) {
-                Task newTask = new Task(input);
-                tasks.add(newTask);
-                System.out.println(" added: " + input);
+            } else if (input.startsWith("todo ")) {
+                String description = input.substring(5).trim();
+                Task newTodo = new Todo(description);
+                tasks.add(newTodo);
+                printAddedConfirmation(newTodo, tasks.size());
+            } else if (input.startsWith("deadline ")) {
+                int byIndex = input.indexOf("/by ");
+                if (byIndex != -1) {
+                    String description = input.substring(9, byIndex).trim();
+                    String by = input.substring(byIndex + 4).trim();
+                    Task newDeadline = new Deadline(description, by);
+                    tasks.add(newDeadline);
+                    printAddedConfirmation(newDeadline, tasks.size());
+                } else {
+                    System.out.println(" Use format: deadline [description] /by [time]");
+                }
+            } else if (input.startsWith("event ")) {
+                int fromIndex = input.indexOf("/from ");
+                int toIndex = input.indexOf("/to ");
+                if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex) {
+                    String description = input.substring(6, fromIndex).trim();
+                    String from = input.substring(fromIndex + 6, toIndex).trim();
+                    String to = input.substring(toIndex + 4).trim();
+                    Task newEvent = new Event(description, from, to);
+                    tasks.add(newEvent);
+                    printAddedConfirmation(newEvent, tasks.size());
+                } else {
+                    System.out.println(" Use format: event [description] /from [start] /to [end]");
+                }
+            } else {
+                System.out.println(" Unknown command. Please use todo, deadline, event, list, mark, unmark, or bye.");
             }
-            
+
             System.out.println(divider);
         }
 
@@ -80,5 +107,11 @@ public class Duke {
         System.out.println(divider);
 
         scanner.close();
+    }
+
+    private static void printAddedConfirmation(Task task, int taskCount) {
+        System.out.println(" Got it. I've added this task:");
+        System.out.println("   " + task);
+        System.out.println(" Now you have " + taskCount + " tasks in the list.");
     }
 }
