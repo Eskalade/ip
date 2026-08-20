@@ -26,15 +26,23 @@ public class Duke {
 
         while (true) {
             String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                continue;
+            }
 
-            if (input.equalsIgnoreCase("bye")) {
+            // Split the input into the command word and the remaining arguments
+            String[] parts = input.split(" ", 2);
+            Command cmd = Command.fromString(parts[0]);
+            String arguments = parts.length > 1 ? parts[1].trim() : "";
+
+            if (cmd == Command.BYE) {
                 break;
             }
 
             System.out.println(divider);
 
             try {
-                processCommand(input, tasks);
+                processCommand(cmd, arguments, tasks);
             } catch (DukeException e) {
                 System.out.println(" OOPS!!! " + e.getMessage());
             }
@@ -49,8 +57,9 @@ public class Duke {
         scanner.close();
     }
 
-    private static void processCommand(String input, ArrayList<Task> tasks) throws DukeException {
-        if (input.equalsIgnoreCase("list")) {
+    private static void processCommand(Command cmd, String arguments, ArrayList<Task> tasks) throws DukeException {
+        switch (cmd) {
+        case LIST:
             if (tasks.isEmpty()) {
                 System.out.println(" Your list is currently empty.");
                 return;
@@ -59,66 +68,67 @@ public class Duke {
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println(" " + (i + 1) + "." + tasks.get(i));
             }
-        } else if (input.equals("todo") || input.startsWith("todo ")) {
-            if (input.equals("todo")) {
+            break;
+
+        case TODO:
+            if (arguments.isEmpty()) {
                 throw new DukeException("The description of a todo cannot be empty. Use: todo [description]");
             }
-            String description = input.substring(5).trim();
-            if (description.isEmpty()) {
-                throw new DukeException("The description of a todo cannot be empty.");
-            }
-            Task newTodo = new Todo(description);
+            Task newTodo = new Todo(arguments);
             tasks.add(newTodo);
             printAddedConfirmation(newTodo, tasks.size());
+            break;
 
-        } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-            if (input.equals("deadline")) {
+        case DEADLINE:
+            if (arguments.isEmpty()) {
                 throw new DukeException("The description of a deadline cannot be empty. Use: deadline [description] /by [time]");
             }
-            int byIndex = input.indexOf("/by");
+            int byIndex = arguments.indexOf("/by");
             if (byIndex == -1) {
                 throw new DukeException("A deadline requires a '/by' parameter. Use: deadline [description] /by [time]");
             }
-            String description = input.substring(9, byIndex).trim();
-            String by = input.substring(byIndex + 3).trim();
-            if (description.isEmpty()) {
+            String deadlineDesc = arguments.substring(0, byIndex).trim();
+            String by = arguments.substring(byIndex + 3).trim();
+            if (deadlineDesc.isEmpty()) {
                 throw new DukeException("The description of a deadline cannot be empty.");
             }
             if (by.isEmpty()) {
                 throw new DukeException("The deadline date/time cannot be empty.");
             }
-            Task newDeadline = new Deadline(description, by);
+            Task newDeadline = new Deadline(deadlineDesc, by);
             tasks.add(newDeadline);
             printAddedConfirmation(newDeadline, tasks.size());
+            break;
 
-        } else if (input.equals("event") || input.startsWith("event ")) {
-            if (input.equals("event")) {
+        case EVENT:
+            if (arguments.isEmpty()) {
                 throw new DukeException("The description of an event cannot be empty. Use: event [description] /from [start] /to [end]");
             }
-            int fromIndex = input.indexOf("/from");
-            int toIndex = input.indexOf("/to");
+            int fromIndex = arguments.indexOf("/from");
+            int toIndex = arguments.indexOf("/to");
             if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
                 throw new DukeException("An event requires both '/from' and '/to' parameters. Use: event [description] /from [start] /to [end]");
             }
-            String description = input.substring(6, fromIndex).trim();
-            String from = input.substring(fromIndex + 5, toIndex).trim();
-            String to = input.substring(toIndex + 3).trim();
-            if (description.isEmpty()) {
+            String eventDesc = arguments.substring(0, fromIndex).trim();
+            String from = arguments.substring(fromIndex + 5, toIndex).trim();
+            String to = arguments.substring(toIndex + 3).trim();
+            if (eventDesc.isEmpty()) {
                 throw new DukeException("The description of an event cannot be empty.");
             }
             if (from.isEmpty() || to.isEmpty()) {
                 throw new DukeException("The start and end times of an event cannot be empty.");
             }
-            Task newEvent = new Event(description, from, to);
+            Task newEvent = new Event(eventDesc, from, to);
             tasks.add(newEvent);
             printAddedConfirmation(newEvent, tasks.size());
+            break;
 
-        } else if (input.equals("mark") || input.startsWith("mark ")) {
-            if (input.equals("mark")) {
+        case MARK:
+            if (arguments.isEmpty()) {
                 throw new DukeException("Please specify the task number to mark as done. Use: mark [index]");
             }
             try {
-                int index = Integer.parseInt(input.substring(5).trim()) - 1;
+                int index = Integer.parseInt(arguments) - 1;
                 if (index < 0 || index >= tasks.size()) {
                     throw new DukeException("Task number out of range. You currently have " + tasks.size() + " tasks.");
                 }
@@ -129,13 +139,14 @@ public class Duke {
             } catch (NumberFormatException e) {
                 throw new DukeException("The task number must be a valid integer.");
             }
+            break;
 
-        } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-            if (input.equals("unmark")) {
+        case UNMARK:
+            if (arguments.isEmpty()) {
                 throw new DukeException("Please specify the task number to unmark. Use: unmark [index]");
             }
             try {
-                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                int index = Integer.parseInt(arguments) - 1;
                 if (index < 0 || index >= tasks.size()) {
                     throw new DukeException("Task number out of range. You currently have " + tasks.size() + " tasks.");
                 }
@@ -146,13 +157,14 @@ public class Duke {
             } catch (NumberFormatException e) {
                 throw new DukeException("The task number must be a valid integer.");
             }
+            break;
 
-        } else if (input.equals("delete") || input.startsWith("delete ")) {
-            if (input.equals("delete")) {
+        case DELETE:
+            if (arguments.isEmpty()) {
                 throw new DukeException("Please specify the task number to delete. Use: delete [index]");
             }
             try {
-                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                int index = Integer.parseInt(arguments) - 1;
                 if (index < 0 || index >= tasks.size()) {
                     throw new DukeException("Task number out of range. You currently have " + tasks.size() + " tasks.");
                 }
@@ -163,8 +175,10 @@ public class Duke {
             } catch (NumberFormatException e) {
                 throw new DukeException("The task number must be a valid integer.");
             }
+            break;
 
-        } else {
+        case UNKNOWN:
+        default:
             throw new DukeException("I'm sorry, but I don't know what that means :-(");
         }
     }
