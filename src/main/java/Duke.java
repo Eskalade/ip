@@ -147,6 +147,23 @@ public class Duke {
                 throw new DukeException("The task number must be a valid integer.");
             }
 
+        } else if (input.equals("delete") || input.startsWith("delete ")) {
+            if (input.equals("delete")) {
+                throw new DukeException("Please specify the task number to delete. Use: delete [index]");
+            }
+            try {
+                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                if (index < 0 || index >= tasks.size()) {
+                    throw new DukeException("Task number out of range. You currently have " + tasks.size() + " tasks.");
+                }
+                Task removedTask = tasks.remove(index);
+                System.out.println(" Noted. I've removed this task:");
+                System.out.println("   " + removedTask);
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            } catch (NumberFormatException e) {
+                throw new DukeException("The task number must be a valid integer.");
+            }
+
         } else {
             throw new DukeException("I'm sorry, but I don't know what that means :-(");
         }
