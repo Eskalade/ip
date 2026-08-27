@@ -5,6 +5,7 @@ import nutrisoy.command.DeadlineCommand;
 import nutrisoy.command.DeleteCommand;
 import nutrisoy.command.EventCommand;
 import nutrisoy.command.ExitCommand;
+import nutrisoy.command.FindCommand;
 import nutrisoy.command.ListCommand;
 import nutrisoy.command.MarkCommand;
 import nutrisoy.command.TodoCommand;
@@ -49,6 +50,8 @@ public class Parser {
             return new UnmarkCommand(arguments);
         case "delete":
             return new DeleteCommand(arguments);
+        case "find":
+            return new FindCommand(arguments);
         default:
             throw new DukeException("I'm sorry, but I don't know what that means :-(");
         }

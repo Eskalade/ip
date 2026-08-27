@@ -30,7 +30,7 @@ public class Ui {
              / /|  / /_/ / /_/ /   / / / /___/ / /_/ / /_/ /  
             /_/ |_/\\__,_/\\__/_/   /_/ /_//____/\\____/\\__, /   
                                                     /____/    
-            """;
+                """;
         System.out.println(divider);
         System.out.print(logo);
         System.out.println(" Hello! I'm NutriSoy");
@@ -130,6 +130,22 @@ public class Ui {
         System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println(" " + (i + 1) + "." + tasks.get(i));
+        }
+    }
+
+    /**
+     * Displays the list of tasks that match the search keyword.
+     *
+     * @param matchingTasks The TaskList containing the matching tasks.
+     */
+    public void showMatchingTasks(TaskList matchingTasks) {
+        if (matchingTasks.isEmpty()) {
+            System.out.println(" No matching tasks found in your list.");
+            return;
+        }
+        System.out.println(" Here are the matching tasks in your list:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + matchingTasks.get(i));
         }
     }
 }

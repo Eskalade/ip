@@ -4,14 +4,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 import nutrisoy.exception.DukeException;
+/**
+ * Adds an event task from user-provided command arguments.
+ */
+
 import nutrisoy.task.Event;
 import nutrisoy.task.Task;
 import nutrisoy.task.TaskList;
 import nutrisoy.ui.Ui;
 
-/**
- * Adds an event task from user-provided command arguments.
- */
 public class EventCommand extends Command {
     private final String arguments;
 
@@ -29,6 +30,7 @@ public class EventCommand extends Command {
      *
      * @param tasks list to which the event is added
      * @param ui user interface used to display the result
+     * @param storage storage used by the application
      * @throws DukeException if the event arguments are invalid
      */
     @Override
