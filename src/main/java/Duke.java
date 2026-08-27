@@ -21,8 +21,11 @@ public class Duke {
         System.out.println(" What can I do for you?");
         System.out.println(divider);
 
+        // Initialize storage and load existing tasks
+        Storage storage = new Storage("./data/duke.txt");
+        ArrayList<Task> tasks = storage.loadTasks();
+
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -30,7 +33,6 @@ public class Duke {
                 continue;
             }
 
-            // Split the input into the command word and the remaining arguments
             String[] parts = input.split(" ", 2);
             Command cmd = Command.fromString(parts[0]);
             String arguments = parts.length > 1 ? parts[1].trim() : "";
@@ -43,6 +45,7 @@ public class Duke {
 
             try {
                 processCommand(cmd, arguments, tasks);
+                storage.saveTasks(tasks); // Saves state automatically on success
             } catch (DukeException e) {
                 System.out.println(" OOPS!!! " + e.getMessage());
             }
