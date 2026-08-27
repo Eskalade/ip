@@ -5,13 +5,29 @@ import nutrisoy.ui.Ui;
 import nutrisoy.storage.Storage;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Marks a task identified by a user-provided index as complete.
+ */
 public class MarkCommand extends Command {
     private final String indexString;
 
+    /**
+     * Creates a command with the task index to mark.
+     *
+     * @param indexString one-based index supplied by the user
+     */
     public MarkCommand(String indexString) {
         this.indexString = indexString;
     }
 
+    /**
+     * Marks the requested task as complete and displays the result.
+     *
+     * @param tasks list containing the task to mark
+     * @param ui user interface used to display the result
+     * @param storage storage used by the application
+     * @throws DukeException if the task index is invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         if (indexString.isEmpty()) {

@@ -7,11 +7,19 @@ import nutrisoy.command.Command;
 import nutrisoy.parser.Parser;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Coordinates the NutriSoy application's user interface, storage, and tasks.
+ */
 public class Duke {
     private final Storage storage;
     private TaskList tasks;
     private final Ui ui;
 
+    /**
+     * Creates the application and loads tasks from the specified storage file.
+     *
+     * @param filePath path to the file used to persist tasks
+     */
     public Duke(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -23,6 +31,9 @@ public class Duke {
         }
     }
 
+    /**
+     * Runs the command-processing loop until the user exits the application.
+     */
     public void run() {
         ui.showWelcome();
         boolean isExit = false;
@@ -42,6 +53,11 @@ public class Duke {
         }
     }
 
+    /**
+     * Starts the NutriSoy application.
+     *
+     * @param args command-line arguments, which are not used
+     */
     public static void main(String[] args) {
         new Duke("./data/duke.txt").run();
     }

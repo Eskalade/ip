@@ -3,7 +3,17 @@ package nutrisoy.parser;
 import nutrisoy.command.*;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Converts user input into executable commands.
+ */
 public class Parser {
+    /**
+     * Parses a complete user command into its corresponding command object.
+     *
+     * @param fullCommand command text entered by the user
+     * @return command represented by the supplied text
+     * @throws DukeException if the command is empty or unrecognised
+     */
     public static Command parse(String fullCommand) throws DukeException {
         String trimmed = fullCommand.trim();
         if (trimmed.isEmpty()) {
