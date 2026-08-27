@@ -1,6 +1,14 @@
 package nutrisoy.parser;
 
-import nutrisoy.command.*;
+import nutrisoy.command.Command;
+import nutrisoy.command.DeadlineCommand;
+import nutrisoy.command.DeleteCommand;
+import nutrisoy.command.EventCommand;
+import nutrisoy.command.ExitCommand;
+import nutrisoy.command.ListCommand;
+import nutrisoy.command.MarkCommand;
+import nutrisoy.command.TodoCommand;
+import nutrisoy.command.UnmarkCommand;
 import nutrisoy.exception.DukeException;
 
 /**

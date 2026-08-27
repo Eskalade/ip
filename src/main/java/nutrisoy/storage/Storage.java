@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import nutrisoy.task.*;
+
 import nutrisoy.exception.DukeException;
+import nutrisoy.task.Deadline;
+import nutrisoy.task.Event;
+import nutrisoy.task.Task;
+import nutrisoy.task.Todo;
 
 /**
  * Loads tasks from and saves tasks to a local file.

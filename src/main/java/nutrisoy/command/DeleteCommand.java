@@ -1,9 +1,9 @@
 package nutrisoy.command;
 
-import nutrisoy.task.*;
-import nutrisoy.ui.Ui;
-import nutrisoy.storage.Storage;
 import nutrisoy.exception.DukeException;
+import nutrisoy.task.Task;
+import nutrisoy.task.TaskList;
+import nutrisoy.ui.Ui;
 
 /**
  * Removes a task identified by a user-provided index.
@@ -29,7 +29,7 @@ public class DeleteCommand extends Command {
      * @throws DukeException if the task index is invalid
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
+    public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (indexString.isEmpty()) {
             throw new DukeException("Please specify the task number to delete. Use: delete [index]");
         }

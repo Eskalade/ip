@@ -2,10 +2,13 @@ package nutrisoy.command;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import nutrisoy.task.*;
-import nutrisoy.ui.Ui;
-import nutrisoy.storage.Storage;
+
 import nutrisoy.exception.DukeException;
+import nutrisoy.task.Event;
+import nutrisoy.task.Task;
+import nutrisoy.task.TaskList;
+import nutrisoy.ui.Ui;
+
 /**
  * Adds an event task from user-provided command arguments.
  */
@@ -26,18 +29,19 @@ public class EventCommand extends Command {
      *
      * @param tasks list to which the event is added
      * @param ui user interface used to display the result
-     * @param storage storage used by the application
      * @throws DukeException if the event arguments are invalid
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
+    public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (arguments.isEmpty()) {
-            throw new DukeException("The description of an event cannot be empty. Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
+            throw new DukeException("The description of an event cannot be empty. "
+                    + "Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
         }
         int fromIndex = arguments.indexOf("/from");
         int toIndex = arguments.indexOf("/to");
         if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-            throw new DukeException("An event requires both '/from' and '/to' parameters. Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
+            throw new DukeException("An event requires both '/from' and '/to' parameters. "
+                    + "Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
         }
         String description = arguments.substring(0, fromIndex).trim();
         String fromString = arguments.substring(fromIndex + 5, toIndex).trim();
