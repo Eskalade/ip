@@ -13,6 +13,15 @@ public class Task {
         return (isDone ? "X" : " "); 
     }
 
+    /**
+     * Returns this task's description.
+     *
+     * @return description of this task
+     */
+    public String getDescription() {
+        return description;
+    }
+
     public void markAsDone() {
         this.isDone = true;
     }

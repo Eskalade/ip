@@ -31,6 +31,8 @@ public class Parser {
             return new UnmarkCommand(arguments);
         case "delete":
             return new DeleteCommand(arguments);
+        case "find":
+            return new FindCommand(arguments);
         default:
             throw new DukeException("I'm sorry, but I don't know what that means :-(");
         }
