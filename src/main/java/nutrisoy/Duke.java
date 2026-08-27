@@ -1,3 +1,12 @@
+package nutrisoy;
+
+import nutrisoy.ui.Ui;
+import nutrisoy.storage.Storage;
+import nutrisoy.task.TaskList;
+import nutrisoy.command.Command;
+import nutrisoy.parser.Parser;
+import nutrisoy.exception.DukeException;
+
 public class Duke {
     private final Storage storage;
     private TaskList tasks;

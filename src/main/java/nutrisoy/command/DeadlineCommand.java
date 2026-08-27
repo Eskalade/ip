@@ -1,5 +1,11 @@
+package nutrisoy.command;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import nutrisoy.task.*;
+import nutrisoy.ui.Ui;
+import nutrisoy.storage.Storage;
+import nutrisoy.exception.DukeException;
 
 public class DeadlineCommand extends Command {
     private final String arguments;
