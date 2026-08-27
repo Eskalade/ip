@@ -1,3 +1,10 @@
+package nutrisoy.command;
+
+import nutrisoy.task.*;
+import nutrisoy.ui.Ui;
+import nutrisoy.storage.Storage;
+import nutrisoy.exception.DukeException;
+
 public class TodoCommand extends Command {
     private final String description;
 
