@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,7 +17,7 @@ public class Storage {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            return tasks; 
+            return tasks;
         }
 
         try (Scanner scanner = new Scanner(file)) {
@@ -46,7 +47,7 @@ public class Storage {
             File file = new File(filePath);
             File parentDir = file.getParentFile();
             if (parentDir != null && !parentDir.exists()) {
-                parentDir.mkdirs(); 
+                parentDir.mkdirs();
             }
 
             try (FileWriter writer = new FileWriter(file)) {
@@ -78,13 +79,16 @@ public class Storage {
             if (parts.length < 4) {
                 throw new DukeException("Missing deadline date");
             }
-            task = new Deadline(description, parts[3]);
+            LocalDate byDate = LocalDate.parse(parts[3]);
+            task = new Deadline(description, byDate);
             break;
         case "E":
             if (parts.length < 5) {
                 throw new DukeException("Missing event timeline");
             }
-            task = new Event(description, parts[3], parts[4]);
+            LocalDate fromDate = LocalDate.parse(parts[3]);
+            LocalDate toDate = LocalDate.parse(parts[4]);
+            task = new Event(description, fromDate, toDate);
             break;
         default:
             throw new DukeException("Unknown task type");
