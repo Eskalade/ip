@@ -1,13 +1,12 @@
 package nutrisoy.command;
 
+import nutrisoy.exception.DukeException;
 import nutrisoy.task.TaskList;
 import nutrisoy.ui.Ui;
-import nutrisoy.storage.Storage;
-import nutrisoy.exception.DukeException;
 
 public class ListCommand extends Command {
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
+    public void execute(TaskList tasks, Ui ui) throws DukeException {
         ui.showTaskList(tasks);
     }
 }

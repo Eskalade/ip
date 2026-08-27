@@ -1,11 +1,11 @@
 package nutrisoy;
 
-import nutrisoy.ui.Ui;
+import nutrisoy.command.Command;
+import nutrisoy.exception.DukeException;
+import nutrisoy.parser.Parser;
 import nutrisoy.storage.Storage;
 import nutrisoy.task.TaskList;
-import nutrisoy.command.Command;
-import nutrisoy.parser.Parser;
-import nutrisoy.exception.DukeException;
+import nutrisoy.ui.Ui;
 
 public class Duke {
     private final Storage storage;
@@ -31,9 +31,9 @@ public class Duke {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
                 Command c = Parser.parse(fullCommand);
-                c.execute(tasks, ui, storage);
+                c.execute(tasks, ui);
                 isExit = c.isExit();
-                storage.saveTasks(tasks.getTasks()); // Auto-save state to storage
+                storage.saveTasks(tasks.getTasks());
             } catch (DukeException e) {
                 ui.showError(e.getMessage());
             } finally {

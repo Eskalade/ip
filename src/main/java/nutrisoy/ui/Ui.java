@@ -1,8 +1,10 @@
 package nutrisoy.ui;
 
 import java.util.Scanner;
-import nutrisoy.task.TaskList;
+
 import nutrisoy.task.Task;
+import nutrisoy.task.TaskList;
+
 public class Ui {
     private final String divider = "____________________________________________________________";
     private final Scanner scanner;

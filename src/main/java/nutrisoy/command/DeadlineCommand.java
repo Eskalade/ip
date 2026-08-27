@@ -2,10 +2,12 @@ package nutrisoy.command;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import nutrisoy.task.*;
-import nutrisoy.ui.Ui;
-import nutrisoy.storage.Storage;
+
 import nutrisoy.exception.DukeException;
+import nutrisoy.task.Deadline;
+import nutrisoy.task.Task;
+import nutrisoy.task.TaskList;
+import nutrisoy.ui.Ui;
 
 public class DeadlineCommand extends Command {
     private final String arguments;
@@ -15,13 +17,15 @@ public class DeadlineCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
+    public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (arguments.isEmpty()) {
-            throw new DukeException("The description of a deadline cannot be empty. Use: deadline [description] /by [yyyy-MM-dd]");
+            throw new DukeException("The description of a deadline cannot be empty. "
+                    + "Use: deadline [description] /by [yyyy-MM-dd]");
         }
         int byIndex = arguments.indexOf("/by");
         if (byIndex == -1) {
-            throw new DukeException("A deadline requires a '/by' parameter. Use: deadline [description] /by [yyyy-MM-dd]");
+            throw new DukeException("A deadline requires a '/by' parameter. "
+                    + "Use: deadline [description] /by [yyyy-MM-dd]");
         }
         String description = arguments.substring(0, byIndex).trim();
         String byString = arguments.substring(byIndex + 3).trim();
