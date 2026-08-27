@@ -84,63 +84,60 @@ public class Duke {
 
         case DEADLINE:
             if (arguments.isEmpty()) {
-                throw new DukeException("The description of a deadline cannot be empty. Use: deadline [description] /by [time]");
+                throw new DukeException("The description of a deadline cannot be empty. Use: deadline [description] /by [yyyy-MM-dd]");
             }
             int byIndex = arguments.indexOf("/by");
             if (byIndex == -1) {
-                throw new DukeException("A deadline requires a '/by' parameter. Use: deadline [description] /by [time]");
+                throw new DukeException("A deadline requires a '/by' parameter. Use: deadline [description] /by [yyyy-MM-dd]");
             }
             String deadlineDesc = arguments.substring(0, byIndex).trim();
-            String by = arguments.substring(byIndex + 3).trim();
+            String byString = arguments.substring(byIndex + 3).trim();
             if (deadlineDesc.isEmpty()) {
                 throw new DukeException("The description of a deadline cannot be empty.");
             }
-            if (by.isEmpty()) {
-                throw new DukeException("The deadline date/time cannot be empty.");
+            if (byString.isEmpty()) {
+                throw new DukeException("The deadline date cannot be empty.");
             }
-            Task newDeadline = new Deadline(deadlineDesc, by);
-            tasks.add(newDeadline);
-            printAddedConfirmation(newDeadline, tasks.size());
+            
+            // Try parsing to LocalDate
+            try {
+                java.time.LocalDate byDate = java.time.LocalDate.parse(byString);
+                Task newDeadline = new Deadline(deadlineDesc, byDate);
+                tasks.add(newDeadline);
+                printAddedConfirmation(newDeadline, tasks.size());
+            } catch (java.time.format.DateTimeParseException e) {
+                throw new DukeException("Please provide the deadline date in yyyy-MM-dd format (e.g., 2019-12-02).");
+            }
             break;
 
         case EVENT:
             if (arguments.isEmpty()) {
-                throw new DukeException("The description of an event cannot be empty. Use: event [description] /from [start] /to [end]");
+                throw new DukeException("The description of an event cannot be empty. Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
             }
             int fromIndex = arguments.indexOf("/from");
             int toIndex = arguments.indexOf("/to");
             if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-                throw new DukeException("An event requires both '/from' and '/to' parameters. Use: event [description] /from [start] /to [end]");
+                throw new DukeException("An event requires both '/from' and '/to' parameters. Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
             }
             String eventDesc = arguments.substring(0, fromIndex).trim();
-            String from = arguments.substring(fromIndex + 5, toIndex).trim();
-            String to = arguments.substring(toIndex + 3).trim();
+            String fromString = arguments.substring(fromIndex + 5, toIndex).trim();
+            String toString = arguments.substring(toIndex + 3).trim();
             if (eventDesc.isEmpty()) {
                 throw new DukeException("The description of an event cannot be empty.");
             }
-            if (from.isEmpty() || to.isEmpty()) {
-                throw new DukeException("The start and end times of an event cannot be empty.");
+            if (fromString.isEmpty() || toString.isEmpty()) {
+                throw new DukeException("The start and end dates of an event cannot be empty.");
             }
-            Task newEvent = new Event(eventDesc, from, to);
-            tasks.add(newEvent);
-            printAddedConfirmation(newEvent, tasks.size());
-            break;
-
-        case MARK:
-            if (arguments.isEmpty()) {
-                throw new DukeException("Please specify the task number to mark as done. Use: mark [index]");
-            }
+            
+            // Try parsing to LocalDate
             try {
-                int index = Integer.parseInt(arguments) - 1;
-                if (index < 0 || index >= tasks.size()) {
-                    throw new DukeException("Task number out of range. You currently have " + tasks.size() + " tasks.");
-                }
-                Task task = tasks.get(index);
-                task.markAsDone();
-                System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   " + task);
-            } catch (NumberFormatException e) {
-                throw new DukeException("The task number must be a valid integer.");
+                java.time.LocalDate fromDate = java.time.LocalDate.parse(fromString);
+                java.time.LocalDate toDate = java.time.LocalDate.parse(toString);
+                Task newEvent = new Event(eventDesc, fromDate, toDate);
+                tasks.add(newEvent);
+                printAddedConfirmation(newEvent, tasks.size());
+            } catch (java.time.format.DateTimeParseException e) {
+                throw new DukeException("Please provide event dates in yyyy-MM-dd format (e.g., 2019-12-02).");
             }
             break;
 
