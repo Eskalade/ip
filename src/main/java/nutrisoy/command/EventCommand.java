@@ -6,13 +6,29 @@ import nutrisoy.task.*;
 import nutrisoy.ui.Ui;
 import nutrisoy.storage.Storage;
 import nutrisoy.exception.DukeException;
+/**
+ * Adds an event task from user-provided command arguments.
+ */
 public class EventCommand extends Command {
     private final String arguments;
 
+    /**
+     * Creates a command with the arguments describing the event.
+     *
+     * @param arguments event description and date-range information
+     */
     public EventCommand(String arguments) {
         this.arguments = arguments;
     }
 
+    /**
+     * Adds the requested event task and displays the result.
+     *
+     * @param tasks list to which the event is added
+     * @param ui user interface used to display the result
+     * @param storage storage used by the application
+     * @throws DukeException if the event arguments are invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         if (arguments.isEmpty()) {

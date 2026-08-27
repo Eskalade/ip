@@ -7,13 +7,29 @@ import nutrisoy.ui.Ui;
 import nutrisoy.storage.Storage;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Adds a deadline task from user-provided command arguments.
+ */
 public class DeadlineCommand extends Command {
     private final String arguments;
 
+    /**
+     * Creates a command with the arguments describing the deadline.
+     *
+     * @param arguments deadline description and due-date information
+     */
     public DeadlineCommand(String arguments) {
         this.arguments = arguments;
     }
 
+    /**
+     * Adds the requested deadline task and displays the result.
+     *
+     * @param tasks list to which the deadline is added
+     * @param ui user interface used to display the result
+     * @param storage storage used by the application
+     * @throws DukeException if the deadline arguments are invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         if (arguments.isEmpty()) {

@@ -5,13 +5,29 @@ import nutrisoy.ui.Ui;
 import nutrisoy.storage.Storage;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Removes a task identified by a user-provided index.
+ */
 public class DeleteCommand extends Command {
     private final String indexString;
 
+    /**
+     * Creates a command with the task index to remove.
+     *
+     * @param indexString one-based index supplied by the user
+     */
     public DeleteCommand(String indexString) {
         this.indexString = indexString;
     }
 
+    /**
+     * Removes the requested task and displays the result.
+     *
+     * @param tasks list from which the task is removed
+     * @param ui user interface used to display the result
+     * @param storage storage used by the application
+     * @throws DukeException if the task index is invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         if (indexString.isEmpty()) {

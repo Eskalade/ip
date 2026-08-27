@@ -9,13 +9,26 @@ import java.util.Scanner;
 import nutrisoy.task.*;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Loads tasks from and saves tasks to a local file.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Creates storage that uses the specified file path.
+     *
+     * @param filePath path to the task data file
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads valid tasks from the storage file.
+     *
+     * @return tasks loaded from the storage file, or an empty list when none can be loaded
+     */
     public ArrayList<Task> loadTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -46,6 +59,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the supplied tasks to the storage file.
+     *
+     * @param tasks tasks to persist
+     */
     public void saveTasks(ArrayList<Task> tasks) {
         try {
             File file = new File(filePath);

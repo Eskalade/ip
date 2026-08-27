@@ -5,13 +5,29 @@ import nutrisoy.ui.Ui;
 import nutrisoy.storage.Storage;
 import nutrisoy.exception.DukeException;
 
+/**
+ * Marks a task identified by a user-provided index as incomplete.
+ */
 public class UnmarkCommand extends Command {
     private final String indexString;
 
+    /**
+     * Creates a command with the task index to unmark.
+     *
+     * @param indexString one-based index supplied by the user
+     */
     public UnmarkCommand(String indexString) {
         this.indexString = indexString;
     }
 
+    /**
+     * Marks the requested task as incomplete and displays the result.
+     *
+     * @param tasks list containing the task to unmark
+     * @param ui user interface used to display the result
+     * @param storage storage used by the application
+     * @throws DukeException if the task index is invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws DukeException {
         if (indexString.isEmpty()) {
