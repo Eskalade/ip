@@ -20,14 +20,7 @@ public class DeleteCommand extends Command {
         this.indexString = indexString;
     }
 
-    /**
-     * Removes the requested task and displays the result.
-     *
-     * @param tasks list from which the task is removed
-     * @param ui user interface used to display the result
-     * @param storage storage used by the application
-     * @throws DukeException if the task index is invalid
-     */
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (indexString.isEmpty()) {

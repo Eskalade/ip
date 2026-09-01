@@ -98,26 +98,26 @@ public class Storage {
 
         Task task;
         switch (type) {
-        case "T":
-            task = new Todo(description);
-            break;
-        case "D":
-            if (parts.length < 4) {
-                throw new DukeException("Missing deadline date");
-            }
-            LocalDate byDate = LocalDate.parse(parts[3]);
-            task = new Deadline(description, byDate);
-            break;
-        case "E":
-            if (parts.length < 5) {
-                throw new DukeException("Missing event timeline");
-            }
-            LocalDate fromDate = LocalDate.parse(parts[3]);
-            LocalDate toDate = LocalDate.parse(parts[4]);
-            task = new Event(description, fromDate, toDate);
-            break;
-        default:
-            throw new DukeException("Unknown task type");
+            case "T":
+                task = new Todo(description);
+                break;
+            case "D":
+                if (parts.length < 4) {
+                    throw new DukeException("Missing deadline date");
+                }
+                LocalDate byDate = LocalDate.parse(parts[3]);
+                task = new Deadline(description, byDate);
+                break;
+            case "E":
+                if (parts.length < 5) {
+                    throw new DukeException("Missing event timeline");
+                }
+                LocalDate fromDate = LocalDate.parse(parts[3]);
+                LocalDate toDate = LocalDate.parse(parts[4]);
+                task = new Event(description, fromDate, toDate);
+                break;
+            default:
+                throw new DukeException("Unknown task type");
         }
 
         if (isDone) {

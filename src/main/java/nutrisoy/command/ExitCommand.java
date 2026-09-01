@@ -8,14 +8,7 @@ import nutrisoy.ui.Ui;
  * Represents a command that exits the application.
  */
 public class ExitCommand extends Command {
-    /**
-     * Displays the application's farewell message.
-     *
-     * @param tasks current task list
-     * @param ui user interface used to display the message
-     * @param storage storage used by the application
-     * @throws DukeException if the command cannot be executed
-     */
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
         ui.showGoodbye();
