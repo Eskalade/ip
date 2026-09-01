@@ -1,13 +1,14 @@
 package nutrisoy.parser;
 
-import org.junit.jupiter.api.Test;
-import nutrisoy.command.Command;
-import nutrisoy.command.TodoCommand;
-import nutrisoy.command.ExitCommand;
-import nutrisoy.exception.DukeException;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+import nutrisoy.command.Command;
+import nutrisoy.command.ExitCommand;
+import nutrisoy.command.TodoCommand;
+import nutrisoy.exception.DukeException;
 
 public class ParserTest {
     @Test

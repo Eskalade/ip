@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'application'
     id 'com.gradleup.shadow' version '9.5.1'
+    id 'checkstyle'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 java {
@@ -22,6 +24,11 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
 }
 
+javafx {
+    version = '25.0.1'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
 test {
     useJUnitPlatform()
 
@@ -37,12 +44,12 @@ test {
 }
 
 application {
-    mainClass = 'nutrisoy.Duke'
+    mainClass = 'nutrisoy.ui.Launcher'
 }
 
 jar {
     manifest {
-        attributes 'Main-Class': 'nutrisoy.Duke'
+        attributes 'Main-Class': 'nutrisoy.ui.Launcher'
     }
     archiveBaseName = 'duke'
     archiveVersion = '0.1.0'
@@ -54,4 +61,11 @@ shadowJar {
 
 run {
     standardInput = System.in
+}
+
+checkstyle {
+    toolVersion = '10.12.4'
+    configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    ignoreFailures = false // Fails the build if any style violation is detected
+    showViolations = true
 }
