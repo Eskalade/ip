@@ -24,14 +24,7 @@ public class DeadlineCommand extends Command {
         this.arguments = arguments;
     }
 
-    /**
-     * Adds the requested deadline task and displays the result.
-     *
-     * @param tasks list to which the deadline is added
-     * @param ui user interface used to display the result
-     * @param storage storage used by the application
-     * @throws DukeException if the deadline arguments are invalid
-     */
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (arguments.isEmpty()) {

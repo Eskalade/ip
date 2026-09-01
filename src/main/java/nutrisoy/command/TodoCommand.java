@@ -21,14 +21,7 @@ public class TodoCommand extends Command {
         this.description = description;
     }
 
-    /**
-     * Adds the requested todo task and displays the result.
-     *
-     * @param tasks list to which the todo is added
-     * @param ui user interface used to display the result
-     * @param storage storage used by the application
-     * @throws DukeException if the todo description is invalid
-     */
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (description.isEmpty()) {

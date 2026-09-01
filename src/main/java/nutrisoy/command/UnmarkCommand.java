@@ -20,14 +20,7 @@ public class UnmarkCommand extends Command {
         this.indexString = indexString;
     }
 
-    /**
-     * Marks the requested task as incomplete and displays the result.
-     *
-     * @param tasks list containing the task to unmark
-     * @param ui user interface used to display the result
-     * @param storage storage used by the application
-     * @throws DukeException if the task index is invalid
-     */
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
         if (indexString.isEmpty()) {
