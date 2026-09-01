@@ -11,6 +11,7 @@ import nutrisoy.task.TaskList;
 public class Ui {
     private final String divider = "____________________________________________________________";
     private final Scanner scanner;
+    private StringBuilder capturedOutput;
 
     /**
      * Creates a user interface that reads commands from standard input.
@@ -42,7 +43,7 @@ public class Ui {
      * Displays a divider line.
      */
     public void showLine() {
-        System.out.println(divider);
+        showMessage(divider);
     }
 
     /**
@@ -60,21 +61,21 @@ public class Ui {
      * @param message error explanation to display
      */
     public void showError(String message) {
-        System.out.println(" OOPS!!! " + message);
+        showMessage(" OOPS!!! " + message);
     }
 
     /**
      * Displays an error message for an unsuccessful task load.
      */
     public void showLoadingError() {
-        System.out.println(" OOPS!!! There was an error loading saved tasks. Starting with an empty list.");
+        showMessage(" OOPS!!! There was an error loading saved tasks. Starting with an empty list.");
     }
 
     /**
      * Displays the application's farewell message.
      */
     public void showGoodbye() {
-        System.out.println(" Bye. Hope to see you again soon!");
+        showMessage(" Bye. Hope to see you again soon!");
     }
 
     /**
@@ -84,9 +85,9 @@ public class Ui {
      * @param totalTasks number of tasks now in the list
      */
     public void showTaskAdded(Task task, int totalTasks) {
-        System.out.println(" Got it. I've added this task:");
-        System.out.println("   " + task);
-        System.out.println(" Now you have " + totalTasks + " tasks in the list.");
+        showMessage(" Got it. I've added this task:");
+        showMessage("   " + task);
+        showMessage(" Now you have " + totalTasks + " tasks in the list.");
     }
 
     /**
@@ -96,9 +97,9 @@ public class Ui {
      * @param totalTasks number of tasks now in the list
      */
     public void showTaskRemoved(Task task, int totalTasks) {
-        System.out.println(" Noted. I've removed this task:");
-        System.out.println("   " + task);
-        System.out.println(" Now you have " + totalTasks + " tasks in the list.");
+        showMessage(" Noted. I've removed this task:");
+        showMessage("   " + task);
+        showMessage(" Now you have " + totalTasks + " tasks in the list.");
     }
 
     /**
@@ -107,8 +108,8 @@ public class Ui {
      * @param task task that was marked
      */
     public void showTaskMarked(Task task) {
-        System.out.println(" Nice! I've marked this task as done:");
-        System.out.println("   " + task);
+        showMessage(" Nice! I've marked this task as done:");
+        showMessage("   " + task);
     }
 
     /**
@@ -117,8 +118,8 @@ public class Ui {
      * @param task task that was unmarked
      */
     public void showTaskUnmarked(Task task) {
-        System.out.println(" OK, I've marked this task as not done yet:");
-        System.out.println("   " + task);
+        showMessage(" OK, I've marked this task as not done yet:");
+        showMessage("   " + task);
     }
 
     /**
@@ -127,9 +128,9 @@ public class Ui {
      * @param tasks task list to display
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println(" Here are the tasks in your list:");
+        showMessage(" Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + tasks.get(i));
+            showMessage(" " + (i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -140,12 +141,43 @@ public class Ui {
      */
     public void showMatchingTasks(TaskList matchingTasks) {
         if (matchingTasks.isEmpty()) {
-            System.out.println(" No matching tasks found in your list.");
+            showMessage(" No matching tasks found in your list.");
             return;
         }
-        System.out.println(" Here are the matching tasks in your list:");
+        showMessage(" Here are the matching tasks in your list:");
         for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + matchingTasks.get(i));
+            showMessage(" " + (i + 1) + "." + matchingTasks.get(i));
         }
+    }
+
+    /**
+     * Begins collecting messages for a graphical user interface response.
+     */
+    public void startCapturingOutput() {
+        capturedOutput = new StringBuilder();
+    }
+
+    /**
+     * Stops collecting messages and returns the accumulated response.
+     *
+     * @return response produced since output capture began
+     */
+    public String stopCapturingOutput() {
+        String response = capturedOutput.toString().stripTrailing();
+        capturedOutput = null;
+        return response;
+    }
+
+    /**
+     * Displays a message in the console or appends it to a GUI response.
+     *
+     * @param message text to display or capture
+     */
+    private void showMessage(String message) {
+        if (capturedOutput == null) {
+            System.out.println(message);
+            return;
+        }
+        capturedOutput.append(message).append(System.lineSeparator());
     }
 }
