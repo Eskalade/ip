@@ -18,6 +18,32 @@ public abstract class Command {
     public abstract void execute(TaskList tasks, Ui ui) throws DukeException;
 
     /**
+     * Converts a user-provided one-based task index into a zero-based list index.
+     *
+     * @param indexString one-based task index supplied by the user
+     * @param tasks list whose bounds should be checked
+     * @param missingIndexMessage message to use when no index is supplied
+     * @return zero-based task index
+     * @throws DukeException if the index is missing, invalid, or out of range
+     */
+    protected int parseTaskIndex(String indexString, TaskList tasks, String missingIndexMessage)
+            throws DukeException {
+        if (indexString.isEmpty()) {
+            throw new DukeException(missingIndexMessage);
+        }
+        try {
+            int index = Integer.parseInt(indexString) - 1;
+            if (index < 0 || index >= tasks.size()) {
+                throw new DukeException("Task number out of range. You currently have " + tasks.size()
+                        + " tasks.");
+            }
+            return index;
+        } catch (NumberFormatException e) {
+            throw new DukeException("The task number must be a valid integer.");
+        }
+    }
+
+    /**
      * Indicates whether this command ends the application.
      *
      * @return {@code true} if this command requests application exit; {@code false} otherwise
