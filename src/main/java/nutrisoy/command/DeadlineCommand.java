@@ -21,12 +21,14 @@ public class DeadlineCommand extends Command {
      * @param arguments deadline description and due-date information
      */
     public DeadlineCommand(String arguments) {
+        assert arguments != null : "Deadline arguments must not be null";
         this.arguments = arguments;
     }
 
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
+        assert tasks != null && ui != null : "Command collaborators must not be null";
         if (arguments.isEmpty()) {
             throw new DukeException("The description of a deadline cannot be empty. "
                     + "Use: deadline [description] /by [yyyy-MM-dd]");

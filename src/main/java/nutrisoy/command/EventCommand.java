@@ -21,12 +21,14 @@ public class EventCommand extends Command {
      * @param arguments event description and date-range information
      */
     public EventCommand(String arguments) {
+        assert arguments != null : "Event arguments must not be null";
         this.arguments = arguments;
     }
 
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
+        assert tasks != null && ui != null : "Command collaborators must not be null";
         if (arguments.isEmpty()) {
             throw new DukeException("The description of an event cannot be empty. "
                     + "Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");

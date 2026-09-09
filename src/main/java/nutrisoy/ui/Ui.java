@@ -61,6 +61,7 @@ public class Ui {
      * @param message error explanation to display
      */
     public void showError(String message) {
+        assert message != null : "Displayed error message must not be null";
         showMessage(" OOPS!!! " + message);
     }
 
@@ -85,6 +86,7 @@ public class Ui {
      * @param totalTasks number of tasks now in the list
      */
     public void showTaskAdded(Task task, int totalTasks) {
+        assert task != null && totalTasks >= 0 : "Added task and total count must be valid";
         showMessage(" Got it. I've added this task:");
         showMessage("   " + task);
         showMessage(" Now you have " + totalTasks + " tasks in the list.");
@@ -97,6 +99,7 @@ public class Ui {
      * @param totalTasks number of tasks now in the list
      */
     public void showTaskRemoved(Task task, int totalTasks) {
+        assert task != null && totalTasks >= 0 : "Removed task and total count must be valid";
         showMessage(" Noted. I've removed this task:");
         showMessage("   " + task);
         showMessage(" Now you have " + totalTasks + " tasks in the list.");
@@ -108,6 +111,7 @@ public class Ui {
      * @param task task that was marked
      */
     public void showTaskMarked(Task task) {
+        assert task != null : "Marked task must not be null";
         showMessage(" Nice! I've marked this task as done:");
         showMessage("   " + task);
     }
@@ -118,6 +122,7 @@ public class Ui {
      * @param task task that was unmarked
      */
     public void showTaskUnmarked(Task task) {
+        assert task != null : "Unmarked task must not be null";
         showMessage(" OK, I've marked this task as not done yet:");
         showMessage("   " + task);
     }
@@ -128,6 +133,7 @@ public class Ui {
      * @param tasks task list to display
      */
     public void showTaskList(TaskList tasks) {
+        assert tasks != null : "Task list to display must not be null";
         showMessage(" Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             showMessage(" " + (i + 1) + "." + tasks.get(i));
@@ -140,6 +146,7 @@ public class Ui {
      * @param matchingTasks The TaskList containing the matching tasks.
      */
     public void showMatchingTasks(TaskList matchingTasks) {
+        assert matchingTasks != null : "Matching task list must not be null";
         if (matchingTasks.isEmpty()) {
             showMessage(" No matching tasks found in your list.");
             return;
@@ -163,6 +170,7 @@ public class Ui {
      * @return response produced since output capture began
      */
     public String stopCapturingOutput() {
+        assert capturedOutput != null : "Output capture must be started before it is stopped";
         String response = capturedOutput.toString().stripTrailing();
         capturedOutput = null;
         return response;
@@ -174,6 +182,7 @@ public class Ui {
      * @param message text to display or capture
      */
     private void showMessage(String message) {
+        assert message != null : "Displayed message must not be null";
         if (capturedOutput == null) {
             System.out.println(message);
             return;

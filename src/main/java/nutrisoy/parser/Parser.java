@@ -24,12 +24,14 @@ public class Parser {
      * @throws DukeException if the command is empty or unrecognised
      */
     public static Command parse(String fullCommand) throws DukeException {
+        assert fullCommand != null : "Command input must not be null";
         String trimmed = fullCommand.trim();
         if (trimmed.isEmpty()) {
             throw new DukeException("Command cannot be empty.");
         }
 
         String[] parts = trimmed.split(" ", 2);
+        assert parts.length >= 1 : "A trimmed command must have a command word";
         String commandWord = parts[0].toLowerCase();
         String arguments = parts.length > 1 ? parts[1].trim() : "";
 
