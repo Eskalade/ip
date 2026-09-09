@@ -18,12 +18,14 @@ public class TodoCommand extends Command {
      * @param description description of the todo task
      */
     public TodoCommand(String description) {
+        assert description != null : "Todo description must not be null";
         this.description = description;
     }
 
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
+        assert tasks != null && ui != null : "Command collaborators must not be null";
         if (description.isEmpty()) {
             throw new DukeException("The description of a todo cannot be empty. Use: todo [description]");
         }

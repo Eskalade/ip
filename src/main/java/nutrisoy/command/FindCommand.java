@@ -17,6 +17,7 @@ public class FindCommand extends Command {
      * @param keyword keyword to search for
      */
     public FindCommand(String keyword) {
+        assert keyword != null : "Search keyword must not be null";
         this.keyword = keyword;
     }
 
@@ -29,6 +30,7 @@ public class FindCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
+        assert tasks != null && ui != null : "Command collaborators must not be null";
         if (keyword.isEmpty()) {
             throw new DukeException("The keyword to search for cannot be empty. Use: find [keyword]");
         }

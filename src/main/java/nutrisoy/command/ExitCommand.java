@@ -11,6 +11,7 @@ public class ExitCommand extends Command {
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
+        assert tasks != null && ui != null : "Command collaborators must not be null";
         ui.showGoodbye();
     }
 

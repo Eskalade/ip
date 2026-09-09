@@ -17,12 +17,14 @@ public class UnmarkCommand extends Command {
      * @param indexString one-based index supplied by the user
      */
     public UnmarkCommand(String indexString) {
+        assert indexString != null : "Task index must not be null";
         this.indexString = indexString;
     }
 
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
+        assert tasks != null && ui != null : "Command collaborators must not be null";
         if (indexString.isEmpty()) {
             throw new DukeException("Please specify the task number to unmark. Use: unmark [index]");
         }

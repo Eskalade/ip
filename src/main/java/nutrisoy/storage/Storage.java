@@ -25,6 +25,7 @@ public class Storage {
      * @param filePath path to the task data file
      */
     public Storage(String filePath) {
+        assert filePath != null && !filePath.isBlank() : "Storage file path must be valid";
         this.filePath = filePath;
     }
 
@@ -34,6 +35,7 @@ public class Storage {
      * @return tasks loaded from the storage file, or an empty list when none can be loaded
      */
     public ArrayList<Task> loadTasks() {
+        assert filePath != null && !filePath.isBlank() : "Storage file path must be valid";
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
 
@@ -69,6 +71,7 @@ public class Storage {
      * @param tasks tasks to persist
      */
     public void saveTasks(ArrayList<Task> tasks) {
+        assert tasks != null : "Tasks to save must not be null";
         try {
             File file = new File(filePath);
             File parentDir = file.getParentFile();
@@ -87,10 +90,12 @@ public class Storage {
     }
 
     private Task parseLineToTask(String line) throws DukeException {
+        assert line != null : "Storage line must not be null";
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
             throw new DukeException("Corrupted format");
         }
+        assert parts.length >= 3 : "A task line must contain type, status, and description";
 
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
@@ -105,6 +110,7 @@ public class Storage {
                 if (parts.length < 4) {
                     throw new DukeException("Missing deadline date");
                 }
+                assert parts.length >= 4 : "A deadline line must contain a date";
                 LocalDate byDate = LocalDate.parse(parts[3]);
                 task = new Deadline(description, byDate);
                 break;
@@ -112,6 +118,7 @@ public class Storage {
                 if (parts.length < 5) {
                     throw new DukeException("Missing event timeline");
                 }
+                assert parts.length >= 5 : "An event line must contain two dates";
                 LocalDate fromDate = LocalDate.parse(parts[3]);
                 LocalDate toDate = LocalDate.parse(parts[4]);
                 task = new Event(description, fromDate, toDate);

@@ -43,6 +43,7 @@ public class MainWindow {
      * @param duke application backend
      */
     public void setDuke(Duke duke) {
+        assert duke != null : "Application backend must not be null";
         this.duke = duke;
     }
 
@@ -74,6 +75,7 @@ public class MainWindow {
      * @return loaded image
      */
     private Image loadImage(String resourcePath) {
+        assert resourcePath != null : "Image resource path must not be null";
         InputStream imageStream = MainWindow.class.getResourceAsStream(resourcePath);
         if (imageStream == null) {
             throw new IllegalStateException("Missing image resource: " + resourcePath);
