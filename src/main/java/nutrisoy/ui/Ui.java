@@ -1,6 +1,7 @@
 package nutrisoy.ui;
 
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 import nutrisoy.task.Task;
 import nutrisoy.task.TaskList;
@@ -135,9 +136,9 @@ public class Ui {
     public void showTaskList(TaskList tasks) {
         assert tasks != null : "Task list to display must not be null";
         showMessage(" Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
+        IntStream.range(0, tasks.size()).forEach(i -> {
             showMessage(" " + (i + 1) + "." + tasks.get(i));
-        }
+        });
     }
 
     /**
@@ -152,9 +153,9 @@ public class Ui {
             return;
         }
         showMessage(" Here are the matching tasks in your list:");
-        for (int i = 0; i < matchingTasks.size(); i++) {
+        IntStream.range(0, matchingTasks.size()).forEach(i -> {
             showMessage(" " + (i + 1) + "." + matchingTasks.get(i));
-        }
+        });
     }
 
     /**
