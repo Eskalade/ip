@@ -129,6 +129,30 @@ public class Ui {
     }
 
     /**
+     * Displays confirmation that a tag was added to a task.
+     *
+     * @param task task that was tagged
+     * @param tagName tag that was added
+     */
+    public void showTaskTagged(Task task, String tagName) {
+        assert task != null && tagName != null : "Tagged task and tag must not be null";
+        showMessage(" I've tagged this task with #" + tagName + ":");
+        showMessage("   " + task);
+    }
+
+    /**
+     * Displays confirmation that a tag was removed from a task.
+     *
+     * @param task task that was untagged
+     * @param tagName tag that was removed
+     */
+    public void showTaskUntagged(Task task, String tagName) {
+        assert task != null && tagName != null : "Untagged task and tag must not be null";
+        showMessage(" I've removed the tag #" + tagName + " from this task:");
+        showMessage("   " + task);
+    }
+
+    /**
      * Displays every task in the supplied task list.
      *
      * @param tasks task list to display

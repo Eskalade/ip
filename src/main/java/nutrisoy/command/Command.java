@@ -44,6 +44,26 @@ public abstract class Command {
     }
 
     /**
+     * Parses the two arguments shared by tag and untag commands.
+     *
+     * @param arguments command arguments containing an index and tag name
+     * @param commandName command name used in the usage message
+     * @return the index and tag name arguments
+     * @throws DukeException if the arguments are missing or malformed
+     */
+    protected static String[] parseTagArguments(String arguments, String commandName) throws DukeException {
+        assert arguments != null && commandName != null : "Tag command arguments must not be null";
+        if (arguments.isBlank()) {
+            throw new DukeException("Usage: " + commandName + " [index] [tag]");
+        }
+        String[] parts = arguments.trim().split("\\s+");
+        if (parts.length != 2) {
+            throw new DukeException("Usage: " + commandName + " [index] [tag]");
+        }
+        return parts;
+    }
+
+    /**
      * Indicates whether this command ends the application.
      *
      * @return {@code true} if this command requests application exit; {@code false} otherwise

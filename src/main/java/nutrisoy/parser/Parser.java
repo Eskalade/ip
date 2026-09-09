@@ -8,8 +8,10 @@ import nutrisoy.command.ExitCommand;
 import nutrisoy.command.FindCommand;
 import nutrisoy.command.ListCommand;
 import nutrisoy.command.MarkCommand;
+import nutrisoy.command.TagCommand;
 import nutrisoy.command.TodoCommand;
 import nutrisoy.command.UnmarkCommand;
+import nutrisoy.command.UntagCommand;
 import nutrisoy.exception.DukeException;
 
 /**
@@ -54,6 +56,10 @@ public class Parser {
                 return new DeleteCommand(arguments);
             case "find":
                 return new FindCommand(arguments);
+            case "tag":
+                return new TagCommand(arguments);
+            case "untag":
+                return new UntagCommand(arguments);
             default:
                 throw new DukeException("I'm sorry, but I don't know what that means :-(");
         }

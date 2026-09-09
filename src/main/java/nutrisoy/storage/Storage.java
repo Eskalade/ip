@@ -91,7 +91,7 @@ public class Storage {
 
     private Task parseLineToTask(String line) throws DukeException {
         assert line != null : "Storage line must not be null";
-        String[] parts = line.split(" \\| ");
+        String[] parts = line.split(" \\| ", -1);
         if (parts.length < 3) {
             throw new DukeException("Corrupted format");
         }
@@ -102,9 +102,11 @@ public class Storage {
         String description = parts[2];
 
         Task task;
+        int tagFieldIndex;
         switch (type) {
             case "T":
                 task = new Todo(description);
+                tagFieldIndex = 3;
                 break;
             case "D":
                 if (parts.length < 4) {
@@ -113,6 +115,7 @@ public class Storage {
                 assert parts.length >= 4 : "A deadline line must contain a date";
                 LocalDate byDate = LocalDate.parse(parts[3]);
                 task = new Deadline(description, byDate);
+                tagFieldIndex = 4;
                 break;
             case "E":
                 if (parts.length < 5) {
@@ -122,14 +125,29 @@ public class Storage {
                 LocalDate fromDate = LocalDate.parse(parts[3]);
                 LocalDate toDate = LocalDate.parse(parts[4]);
                 task = new Event(description, fromDate, toDate);
+                tagFieldIndex = 5;
                 break;
             default:
                 throw new DukeException("Unknown task type");
         }
 
+        if (parts.length > tagFieldIndex) {
+            addTags(task, parts[tagFieldIndex]);
+        }
         if (isDone) {
             task.markAsDone();
         }
         return task;
+    }
+
+    private void addTags(Task task, String tagsField) {
+        if (tagsField.isEmpty()) {
+            return;
+        }
+        for (String tag : tagsField.split(",", -1)) {
+            if (!tag.isEmpty()) {
+                task.addTag(tag);
+            }
+        }
     }
 }
