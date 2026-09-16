@@ -1,0 +1,123 @@
+.root {
+    -fx-font-family: "Avenir Next", "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+}
+
+.main-window {
+    -fx-background-color: #f4f7f2;
+}
+
+.app-header {
+    -fx-background-color: linear-gradient(to right, #194f3f, #28735a);
+    -fx-effect: dropshadow(gaussian, rgba(20, 49, 40, 0.18), 8, 0, 0, 2);
+}
+
+.app-title {
+    -fx-fill: #ffffff;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+
+.app-subtitle {
+    -fx-fill: #d8eee5;
+    -fx-font-size: 12px;
+}
+
+.conversation-scroll,
+.conversation-scroll > .viewport {
+    -fx-background-color: #f4f7f2;
+}
+
+.conversation-scroll {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.dialog-container {
+    -fx-background-color: #f4f7f2;
+}
+
+.dialog-row {
+    -fx-padding: 2px 0 2px 0;
+}
+
+.dialog-bubble {
+    -fx-padding: 10px 13px 10px 13px;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-line-spacing: 2px;
+}
+
+.user-dialog .dialog-bubble {
+    -fx-background-color: #28735a;
+    -fx-text-fill: #ffffff;
+}
+
+.nutrisoy-dialog .dialog-bubble {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dce7df;
+    -fx-border-width: 1px;
+    -fx-text-fill: #24332d;
+    -fx-effect: dropshadow(gaussian, rgba(30, 57, 46, 0.08), 5, 0, 0, 1);
+}
+
+.error-dialog .dialog-bubble {
+    -fx-background-color: #fff3f2;
+    -fx-border-color: #d85b51;
+    -fx-border-width: 1.5px;
+    -fx-text-fill: #8b2f29;
+}
+
+.profile-picture {
+    -fx-opacity: 0.92;
+}
+
+.composer {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dce5df transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.command-input {
+    -fx-background-color: #f5f8f5;
+    -fx-background-radius: 9px;
+    -fx-border-color: #cbd9d0;
+    -fx-border-radius: 9px;
+    -fx-padding: 9px 12px 9px 12px;
+}
+
+.command-input:focused {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #28735a;
+    -fx-effect: dropshadow(gaussian, rgba(40, 115, 90, 0.14), 5, 0, 0, 0);
+}
+
+.send-button {
+    -fx-background-color: #28735a;
+    -fx-background-radius: 9px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-padding: 9px 18px 9px 18px;
+    -fx-text-fill: #ffffff;
+}
+
+.send-button:hover {
+    -fx-background-color: #1f604b;
+}
+
+.send-button:pressed {
+    -fx-background-color: #174a3a;
+}
+
+.status-text {
+    -fx-fill: #718078;
+    -fx-font-size: 11px;
+}
+
+.error-status {
+    -fx-fill: #b33c34;
+}
+
+.ready-status {
+    -fx-fill: #4f7564;
+}

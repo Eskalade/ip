@@ -8,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import nutrisoy.Duke;
 
 /**
@@ -22,6 +23,8 @@ public class MainWindow {
     private TextField userInput;
     @FXML
     private Button sendButton;
+    @FXML
+    private Text statusText;
 
     private Duke duke;
     private Image userImage;
@@ -45,6 +48,9 @@ public class MainWindow {
     public void setDuke(Duke duke) {
         assert duke != null : "Application backend must not be null";
         this.duke = duke;
+        dialogContainer.getChildren().add(DialogBox.getNutriSoyDialog(
+                "Hi! I'm NutriSoy. What can I help you organise today?", dukeImage));
+        userInput.requestFocus();
     }
 
     /**
@@ -56,12 +62,16 @@ public class MainWindow {
         if (input.trim().isEmpty()) {
             return;
         }
-        String response = duke.getResponse(input);
+        GuiResponse response = duke.getGuiResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getNutriSoyDialog(response, dukeImage)
+                response.isError()
+                        ? DialogBox.getErrorDialog(response.getMessage(), dukeImage)
+                        : DialogBox.getNutriSoyDialog(response.getMessage(), dukeImage)
         );
         userInput.clear();
+        statusText.setText(response.isError() ? "Please check the highlighted message" : "Ready");
+        statusText.getStyleClass().setAll("status-text", response.isError() ? "error-status" : "ready-status");
 
         if (input.trim().equalsIgnoreCase("bye")) {
             javafx.application.Platform.exit();

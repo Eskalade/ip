@@ -3,6 +3,7 @@ package nutrisoy.ui;
 import java.io.IOException;
 import java.util.Collections;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
@@ -37,6 +39,8 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setImage(img);
+        displayPicture.setClip(new Circle(18, 18, 18));
+        dialog.maxWidthProperty().bind(Bindings.min(widthProperty().multiply(0.76), 560));
     }
 
     /**
@@ -51,13 +55,31 @@ public class DialogBox extends HBox {
 
     public static DialogBox getUserDialog(String text, Image img) {
         assert text != null && img != null : "Dialog text and image must not be null";
-        return new DialogBox(text, img);
+        DialogBox dialogBox = new DialogBox(text, img);
+        dialogBox.getStyleClass().add("user-dialog");
+        return dialogBox;
     }
 
     public static DialogBox getNutriSoyDialog(String text, Image img) {
         assert text != null && img != null : "Dialog text and image must not be null";
         var db = new DialogBox(text, img);
+        db.getStyleClass().add("nutrisoy-dialog");
         db.flip();
         return db;
+    }
+
+    /**
+     * Creates an app response styled to make command errors easy to notice.
+     *
+     * @param text error message to display
+     * @param img app profile image
+     * @return dialog box with error styling
+     */
+    public static DialogBox getErrorDialog(String text, Image img) {
+        assert text != null && img != null : "Dialog text and image must not be null";
+        DialogBox dialogBox = new DialogBox(text, img);
+        dialogBox.getStyleClass().addAll("nutrisoy-dialog", "error-dialog");
+        dialogBox.flip();
+        return dialogBox;
     }
 }
