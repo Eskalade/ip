@@ -70,7 +70,18 @@ public class Ui {
      * Displays an error message for an unsuccessful task load.
      */
     public void showLoadingError() {
+        showLoadingError("Check that the task file exists and is readable.");
+    }
+
+    /**
+     * Displays an error message for an unsuccessful task load with diagnostic details.
+     *
+     * @param details explanation of the storage failure
+     */
+    public void showLoadingError(String details) {
+        assert details != null : "Loading error details must not be null";
         showMessage(" Your save file chose chaos. I'm starting with a clean list.");
+        showMessage(" " + details);
     }
 
     /**

@@ -31,6 +31,9 @@ public class TagCommand extends Command {
         int index = parseTaskIndex(indexString, tasks,
                 "Usage: tag [index] [tag]");
         Task task = tasks.get(index);
+        if (task.hasTag(tagName)) {
+            throw new DukeException("That task already has the #" + tagName + " tag.");
+        }
         task.addTag(tagName);
         ui.showTaskTagged(task, tagName);
     }

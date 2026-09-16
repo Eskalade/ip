@@ -30,8 +30,8 @@ public class Duke {
         storage = new Storage(filePath);
         try {
             tasks = new TaskList(storage.loadTasks());
-        } catch (Exception e) {
-            ui.showLoadingError();
+        } catch (DukeException e) {
+            ui.showLoadingError(e.getMessage());
             tasks = new TaskList();
         }
     }

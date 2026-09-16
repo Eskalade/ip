@@ -28,6 +28,9 @@ public class UnmarkCommand extends Command {
         int index = parseTaskIndex(indexString, tasks,
                 "Please specify the task number to unmark. Use: unmark [index]");
         Task task = tasks.get(index);
+        if (!task.isDone()) {
+            throw new DukeException("That task is already marked as not done.");
+        }
         task.unmarkAsDone();
         ui.showTaskUnmarked(task);
     }

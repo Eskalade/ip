@@ -34,6 +34,14 @@ public class Event extends Task {
         return "E | " + getCoreFileFormat() + " | " + from + " | " + to + getTagsFileSuffix();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasSameDetails(Task other) {
+        return super.hasSameDetails(other)
+                && from.equals(((Event) other).from)
+                && to.equals(((Event) other).to);
+    }
+
     /**
      * Returns a display representation of this event.
      *

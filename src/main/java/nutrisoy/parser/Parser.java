@@ -26,21 +26,25 @@ public class Parser {
      * @throws DukeException if the command is empty or unrecognised
      */
     public static Command parse(String fullCommand) throws DukeException {
-        assert fullCommand != null : "Command input must not be null";
+        if (fullCommand == null) {
+            throw new DukeException("Command cannot be null.");
+        }
         String trimmed = fullCommand.trim();
         if (trimmed.isEmpty()) {
             throw new DukeException("Command cannot be empty.");
         }
 
-        String[] parts = trimmed.split(" ", 2);
+        String[] parts = trimmed.split("\\s+", 2);
         assert parts.length >= 1 : "A trimmed command must have a command word";
         String commandWord = parts[0].toLowerCase();
         String arguments = parts.length > 1 ? parts[1].trim() : "";
 
         switch (commandWord) {
             case "bye":
+                rejectUnexpectedArguments(commandWord, arguments);
                 return new ExitCommand();
             case "list":
+                rejectUnexpectedArguments(commandWord, arguments);
                 return new ListCommand();
             case "todo":
                 return new TodoCommand(arguments);
@@ -62,6 +66,12 @@ public class Parser {
                 return new UntagCommand(arguments);
             default:
                 throw new DukeException("That command isn't on my guest list. Check the spelling and try again.");
+        }
+    }
+
+    private static void rejectUnexpectedArguments(String commandWord, String arguments) throws DukeException {
+        if (!arguments.isEmpty()) {
+            throw new DukeException("The '" + commandWord + "' command does not accept extra arguments.");
         }
     }
 }

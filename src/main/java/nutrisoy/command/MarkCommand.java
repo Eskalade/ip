@@ -28,6 +28,9 @@ public class MarkCommand extends Command {
         int index = parseTaskIndex(indexString, tasks,
                 "Please specify the task number to mark as done. Use: mark [index]");
         Task task = tasks.get(index);
+        if (task.isDone()) {
+            throw new DukeException("That task is already marked as done.");
+        }
         task.markAsDone();
         ui.showTaskMarked(task);
     }
