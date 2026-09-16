@@ -1,6 +1,7 @@
 package nutrisoy.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import nutrisoy.exception.DukeException;
 import nutrisoy.task.Deadline;
 import nutrisoy.task.Event;
 import nutrisoy.task.Task;
@@ -18,7 +20,8 @@ import nutrisoy.task.Todo;
 
 public class StorageTest {
     @Test
-    public void loadTasks_supportsLegacyAndTaggedRecords(@TempDir Path tempDirectory) throws IOException {
+    public void loadTasks_supportsLegacyAndTaggedRecords(@TempDir Path tempDirectory)
+            throws IOException, DukeException {
         Path storagePath = tempDirectory.resolve("tasks.txt");
         Files.writeString(storagePath, "T | 0 | legacy task\nT | 1 | tagged task | fun,school\n");
 
@@ -31,7 +34,8 @@ public class StorageTest {
     }
 
     @Test
-    public void saveAndLoadTasks_allTaskTypesWithTags_roundTripsSuccessfully(@TempDir Path tempDirectory) {
+    public void saveAndLoadTasks_allTaskTypesWithTags_roundTripsSuccessfully(@TempDir Path tempDirectory)
+            throws DukeException {
         Path storagePath = tempDirectory.resolve("tasks.txt");
         Storage storage = new Storage(storagePath.toString());
         ArrayList<Task> originalTasks = new ArrayList<>();
@@ -58,7 +62,7 @@ public class StorageTest {
 
     @Test
     public void loadTasks_tagBeforeDateRecords_recoversPreviouslyWrittenFormat(
-            @TempDir Path tempDirectory) throws IOException {
+            @TempDir Path tempDirectory) throws IOException, DukeException {
         Path storagePath = tempDirectory.resolve("tasks.txt");
         Files.writeString(storagePath, "D | 0 | submit report | school | 2026-09-20\n"
                 + "E | 1 | project sprint | team | 2026-09-21 | 2026-09-23\n");
@@ -69,5 +73,28 @@ public class StorageTest {
         assertEquals("D | 0 | submit report | 2026-09-20 | school", tasks.get(0).toFileFormat());
         assertEquals("E | 1 | project sprint | 2026-09-21 | 2026-09-23 | team",
                 tasks.get(1).toFileFormat());
+    }
+
+    @Test
+    public void loadTasks_invalidRecords_skipsInvalidData(@TempDir Path tempDirectory)
+            throws IOException, DukeException {
+        Path storagePath = tempDirectory.resolve("tasks.txt");
+        Files.writeString(storagePath, "T | 2 | invalid status\n"
+                + "E | 0 | reversed event | 2026-09-23 | 2026-09-21\n"
+                + "T | 0 | valid task\n"
+                + "T | 0 | valid task\n");
+
+        ArrayList<Task> tasks = new Storage(storagePath.toString()).loadTasks();
+
+        assertEquals(1, tasks.size());
+        assertEquals("T | 0 | valid task", tasks.get(0).toFileFormat());
+    }
+
+    @Test
+    public void storage_directoryUsedAsFile_exceptionThrown(@TempDir Path tempDirectory) {
+        Storage storage = new Storage(tempDirectory.toString());
+
+        assertThrows(DukeException.class, storage::loadTasks);
+        assertThrows(DukeException.class, () -> storage.saveTasks(new ArrayList<>()));
     }
 }

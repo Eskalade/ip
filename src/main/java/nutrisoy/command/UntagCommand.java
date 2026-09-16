@@ -31,6 +31,9 @@ public class UntagCommand extends Command {
         int index = parseTaskIndex(indexString, tasks,
                 "Usage: untag [index] [tag]");
         Task task = tasks.get(index);
+        if (!task.hasTag(tagName)) {
+            throw new DukeException("That task does not have the #" + tagName + " tag.");
+        }
         task.removeTag(tagName);
         ui.showTaskUntagged(task, tagName);
     }

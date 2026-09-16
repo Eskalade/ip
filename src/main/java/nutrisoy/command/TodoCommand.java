@@ -26,11 +26,8 @@ public class TodoCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui) throws DukeException {
         assert tasks != null && ui != null : "Command collaborators must not be null";
-        if (description.isEmpty()) {
-            throw new DukeException("The description of a todo cannot be empty. Use: todo [description]");
-        }
-        Task newTodo = new Todo(description);
-        tasks.add(newTodo);
-        ui.showTaskAdded(newTodo, tasks.size());
+        String validatedDescription = validateDescription(description, "todo");
+        Task newTodo = new Todo(validatedDescription);
+        addUniqueTask(newTodo, tasks, ui);
     }
 }

@@ -33,18 +33,15 @@ public class EventCommand extends Command {
             throw new DukeException("The description of an event cannot be empty. "
                     + "Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
         }
-        int fromIndex = arguments.indexOf("/from");
-        int toIndex = arguments.indexOf("/to");
-        if (fromIndex == -1 || toIndex == -1 || fromIndex > toIndex) {
-            throw new DukeException("An event requires both '/from' and '/to' parameters. "
-                    + "Use: event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]");
+        String usage = "event [description] /from [yyyy-MM-dd] /to [yyyy-MM-dd]";
+        int fromIndex = findSingleParameter(arguments, "/from", usage);
+        int toIndex = findSingleParameter(arguments, "/to", usage);
+        if (fromIndex > toIndex) {
+            throw new DukeException("The '/from' parameter must appear before '/to'. Use: " + usage);
         }
-        String description = arguments.substring(0, fromIndex).trim();
+        String description = validateDescription(arguments.substring(0, fromIndex), "event");
         String fromString = arguments.substring(fromIndex + 5, toIndex).trim();
         String toString = arguments.substring(toIndex + 3).trim();
-        if (description.isEmpty()) {
-            throw new DukeException("The description of an event cannot be empty.");
-        }
         if (fromString.isEmpty() || toString.isEmpty()) {
             throw new DukeException("The start and end dates of an event cannot be empty.");
         }
@@ -52,9 +49,11 @@ public class EventCommand extends Command {
         try {
             LocalDate fromDate = LocalDate.parse(fromString);
             LocalDate toDate = LocalDate.parse(toString);
+            if (!fromDate.isBefore(toDate)) {
+                throw new DukeException("The event start date must be earlier than its end date.");
+            }
             Task newEvent = new Event(description, fromDate, toDate);
-            tasks.add(newEvent);
-            ui.showTaskAdded(newEvent, tasks.size());
+            addUniqueTask(newEvent, tasks, ui);
         } catch (DateTimeParseException e) {
             throw new DukeException("Please provide event dates in yyyy-MM-dd format (e.g., 2019-12-02).");
         }

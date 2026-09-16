@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
  * Represents a task with a description and completion status.
  */
 public class Task {
+    private static final String TAG_NAME_PATTERN = "[A-Za-z0-9][A-Za-z0-9_-]*";
+
     protected String description;
     protected boolean isDone;
     private final LinkedHashSet<String> tags;
@@ -41,6 +43,15 @@ public class Task {
         return description;
     }
 
+    /**
+     * Returns whether this task is complete.
+     *
+     * @return {@code true} if the task is complete
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
 
     /**
      * Marks this task as complete.
@@ -63,7 +74,9 @@ public class Task {
      */
     public void addTag(String tagName) {
         assert tagName != null && !tagName.isBlank() : "Tag name must be valid";
-        tags.add(tagName);
+        if (!hasTag(tagName)) {
+            tags.add(tagName);
+        }
     }
 
     /**
@@ -73,7 +86,40 @@ public class Task {
      */
     public void removeTag(String tagName) {
         assert tagName != null && !tagName.isBlank() : "Tag name must be valid";
-        tags.remove(tagName);
+        tags.removeIf(tag -> tag.equalsIgnoreCase(tagName));
+    }
+
+    /**
+     * Returns whether this task has the supplied tag, ignoring letter case.
+     *
+     * @param tagName tag name to check
+     * @return {@code true} if the task has the tag
+     */
+    public boolean hasTag(String tagName) {
+        assert tagName != null : "Checked tag name must not be null";
+        return tags.stream().anyMatch(tag -> tag.equalsIgnoreCase(tagName));
+    }
+
+    /**
+     * Returns whether a tag name is safe to store and display.
+     *
+     * @param tagName tag name to validate
+     * @return {@code true} if the tag name uses only supported characters
+     */
+    public static boolean isValidTagName(String tagName) {
+        return tagName != null && tagName.matches(TAG_NAME_PATTERN);
+    }
+
+    /**
+     * Returns whether another task has the same type and description.
+     *
+     * @param other task to compare
+     * @return {@code true} if both tasks have the same identifying details
+     */
+    public boolean hasSameDetails(Task other) {
+        return other != null
+                && getClass().equals(other.getClass())
+                && description.equalsIgnoreCase(other.description);
     }
 
     /**
