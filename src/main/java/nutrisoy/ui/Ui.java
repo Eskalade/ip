@@ -10,6 +10,9 @@ import nutrisoy.task.TaskList;
  * Handles console input and output for the NutriSoy application.
  */
 public class Ui {
+    /** Display name used consistently by the console and graphical interfaces. */
+    public static final String BOT_NAME = "Soya";
+
     private final String divider = "____________________________________________________________";
     private final Scanner scanner;
     private StringBuilder capturedOutput;
@@ -26,17 +29,14 @@ public class Ui {
      */
     public void showWelcome() {
         String logo = """
-                _   __      __         _  _____
-               / | / /_  __/ /_________(_)/ ___/____  __  __
-              /  |/ / / / / __/ ___/  _  /\\__ \\/ __ \\/ / / /
-             / /|  / /_/ / /_/ /   / / / /___/ / /_/ / /_/ /
-            /_/ |_/\\__,_/\\__/_/   /_/ /_//____/\\____/\\__, /
-                                                    /____/
+                         .----------------.
+                         |      SOYA      |
+                         '----------------'
                 """;
         System.out.println(divider);
         System.out.print(logo);
-        System.out.println(" Hello! I'm NutriSoy");
-        System.out.println(" What can I do for you?");
+        System.out.println(" Hey, I'm " + BOT_NAME + " -- your sassy task sidekick.");
+        System.out.println(" Hand me a task; I'll keep the chaos organised.");
         System.out.println(divider);
     }
 
@@ -63,21 +63,21 @@ public class Ui {
      */
     public void showError(String message) {
         assert message != null : "Displayed error message must not be null";
-        showMessage(" OOPS!!! " + message);
+        showMessage(" Nice try. " + message);
     }
 
     /**
      * Displays an error message for an unsuccessful task load.
      */
     public void showLoadingError() {
-        showMessage(" OOPS!!! There was an error loading saved tasks. Starting with an empty list.");
+        showMessage(" Your save file chose chaos. I'm starting with a clean list.");
     }
 
     /**
      * Displays the application's farewell message.
      */
     public void showGoodbye() {
-        showMessage(" Bye. Hope to see you again soon!");
+        showMessage(" That's a wrap. Go be iconic -- and maybe finish the rest later.");
     }
 
     /**
@@ -88,9 +88,9 @@ public class Ui {
      */
     public void showTaskAdded(Task task, int totalTasks) {
         assert task != null && totalTasks >= 0 : "Added task and total count must be valid";
-        showMessage(" Got it. I've added this task:");
+        showMessage(" Consider it handled. I added:");
         showMessage("   " + task);
-        showMessage(" Now you have " + totalTasks + " tasks in the list.");
+        showTaskCount(totalTasks);
     }
 
     /**
@@ -101,9 +101,9 @@ public class Ui {
      */
     public void showTaskRemoved(Task task, int totalTasks) {
         assert task != null && totalTasks >= 0 : "Removed task and total count must be valid";
-        showMessage(" Noted. I've removed this task:");
+        showMessage(" And... cut! I removed:");
         showMessage("   " + task);
-        showMessage(" Now you have " + totalTasks + " tasks in the list.");
+        showTaskCount(totalTasks);
     }
 
     /**
@@ -113,7 +113,7 @@ public class Ui {
      */
     public void showTaskMarked(Task task) {
         assert task != null : "Marked task must not be null";
-        showMessage(" Nice! I've marked this task as done:");
+        showMessage(" Look at you being productive. Completed:");
         showMessage("   " + task);
     }
 
@@ -124,7 +124,7 @@ public class Ui {
      */
     public void showTaskUnmarked(Task task) {
         assert task != null : "Unmarked task must not be null";
-        showMessage(" OK, I've marked this task as not done yet:");
+        showMessage(" Plot twist -- this task is back:");
         showMessage("   " + task);
     }
 
@@ -136,7 +136,7 @@ public class Ui {
      */
     public void showTaskTagged(Task task, String tagName) {
         assert task != null && tagName != null : "Tagged task and tag must not be null";
-        showMessage(" I've tagged this task with #" + tagName + ":");
+        showMessage(" Accessorised. I added #" + tagName + " to:");
         showMessage("   " + task);
     }
 
@@ -148,7 +148,7 @@ public class Ui {
      */
     public void showTaskUntagged(Task task, String tagName) {
         assert task != null && tagName != null : "Untagged task and tag must not be null";
-        showMessage(" I've removed the tag #" + tagName + " from this task:");
+        showMessage(" That tag is so last season. I removed #" + tagName + " from:");
         showMessage("   " + task);
     }
 
@@ -159,7 +159,11 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         assert tasks != null : "Task list to display must not be null";
-        showMessage(" Here are the tasks in your list:");
+        if (tasks.isEmpty()) {
+            showMessage(" Your task list is empty. Very minimalist of you.");
+            return;
+        }
+        showMessage(" Here's your lineup:");
         IntStream.range(0, tasks.size()).forEach(i -> {
             showMessage(" " + (i + 1) + "." + tasks.get(i));
         });
@@ -173,10 +177,10 @@ public class Ui {
     public void showMatchingTasks(TaskList matchingTasks) {
         assert matchingTasks != null : "Matching task list must not be null";
         if (matchingTasks.isEmpty()) {
-            showMessage(" No matching tasks found in your list.");
+            showMessage(" No matches. Even I can't serve results that don't exist.");
             return;
         }
-        showMessage(" Here are the matching tasks in your list:");
+        showMessage(" Found them. Obviously:");
         IntStream.range(0, matchingTasks.size()).forEach(i -> {
             showMessage(" " + (i + 1) + "." + matchingTasks.get(i));
         });
@@ -213,5 +217,15 @@ public class Ui {
             return;
         }
         capturedOutput.append(message).append(System.lineSeparator());
+    }
+
+    /**
+     * Displays a grammatically correct task count after the list changes.
+     *
+     * @param totalTasks number of tasks currently in the list
+     */
+    private void showTaskCount(int totalTasks) {
+        String taskWord = totalTasks == 1 ? "task" : "tasks";
+        showMessage(" Your list is now serving " + totalTasks + " " + taskWord + ".");
     }
 }

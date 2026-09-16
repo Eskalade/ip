@@ -26,7 +26,7 @@ public class Main extends Application {
         MainWindow mainWindow = loader.getController();
         mainWindow.setDuke(new Duke("./data/nutrisoy.txt"));
 
-        stage.setTitle("NutriSoy");
+        stage.setTitle(Ui.BOT_NAME + " - NutriSoy");
         Scene scene = new Scene(root);
         scene.getStylesheets().add(Main.class.getResource("/styles/main.css").toExternalForm());
         stage.setScene(scene);

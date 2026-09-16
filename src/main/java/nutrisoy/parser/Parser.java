@@ -61,7 +61,7 @@ public class Parser {
             case "untag":
                 return new UntagCommand(arguments);
             default:
-                throw new DukeException("I'm sorry, but I don't know what that means :-(");
+                throw new DukeException("That command isn't on my guest list. Check the spelling and try again.");
         }
     }
 }
