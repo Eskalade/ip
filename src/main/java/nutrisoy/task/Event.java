@@ -31,7 +31,7 @@ public class Event extends Task {
      */
     @Override
     public String toFileFormat() {
-        return "E | " + super.toFileFormat() + " | " + from + " | " + to;
+        return "E | " + getCoreFileFormat() + " | " + from + " | " + to + getTagsFileSuffix();
     }
 
     /**

@@ -28,7 +28,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toFileFormat() {
-        return "D | " + super.toFileFormat() + " | " + by;
+        return "D | " + getCoreFileFormat() + " | " + by + getTagsFileSuffix();
     }
 
     /**

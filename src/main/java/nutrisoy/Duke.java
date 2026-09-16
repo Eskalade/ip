@@ -12,6 +12,9 @@ import nutrisoy.ui.Ui;
  * Coordinates the NutriSoy application's user interface, storage, and tasks.
  */
 public class Duke {
+    /** Default file shared by the console and graphical versions of NutriSoy. */
+    public static final String DEFAULT_STORAGE_PATH = "./data/nutrisoy.txt";
+
     private final Storage storage;
     private TaskList tasks;
     private final Ui ui;
@@ -92,6 +95,6 @@ public class Duke {
      * @param args command-line arguments, which are not used
      */
     public static void main(String[] args) {
-        new Duke("./data/duke.txt").run();
+        new Duke(DEFAULT_STORAGE_PATH).run();
     }
 }
