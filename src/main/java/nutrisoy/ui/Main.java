@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import nutrisoy.Duke;
 
@@ -22,12 +22,16 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
-        AnchorPane root = loader.load();
+        Parent root = loader.load();
         MainWindow mainWindow = loader.getController();
         mainWindow.setDuke(new Duke("./data/nutrisoy.txt"));
 
         stage.setTitle("NutriSoy");
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/styles/main.css").toExternalForm());
+        stage.setScene(scene);
+        stage.setMinWidth(440);
+        stage.setMinHeight(480);
         stage.show();
     }
 }
