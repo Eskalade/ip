@@ -82,7 +82,25 @@ public class Task {
      * @return storage-file representation of this task
      */
     public String toFileFormat() {
-        return (isDone ? "1" : "0") + " | " + description + " | " + String.join(",", tags);
+        return getCoreFileFormat() + getTagsFileSuffix();
+    }
+
+    /**
+     * Returns the fields shared by every stored task, excluding type-specific fields and tags.
+     *
+     * @return completion status and description in storage-file format
+     */
+    protected String getCoreFileFormat() {
+        return (isDone ? "1" : "0") + " | " + description;
+    }
+
+    /**
+     * Returns the optional tag field, including its delimiter when tags exist.
+     *
+     * @return tag suffix in storage-file format, or an empty string when the task has no tags
+     */
+    protected String getTagsFileSuffix() {
+        return tags.isEmpty() ? "" : " | " + String.join(",", tags);
     }
 
     /**

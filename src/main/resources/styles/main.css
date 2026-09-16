@@ -1,15 +1,15 @@
 .root {
-    -fx-font-family: "Avenir Next", "Segoe UI", sans-serif;
+    -fx-font-family: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
     -fx-font-size: 14px;
 }
 
 .main-window {
-    -fx-background-color: #f4f7f2;
+    -fx-background-color: #fbf6fa;
 }
 
 .app-header {
-    -fx-background-color: linear-gradient(to right, #194f3f, #28735a);
-    -fx-effect: dropshadow(gaussian, rgba(20, 49, 40, 0.18), 8, 0, 0, 2);
+    -fx-background-color: linear-gradient(to right, #4b183f, #7b2c63);
+    -fx-effect: dropshadow(gaussian, rgba(75, 24, 63, 0.22), 8, 0, 0, 2);
 }
 
 .app-title {
@@ -19,13 +19,22 @@
 }
 
 .app-subtitle {
-    -fx-fill: #d8eee5;
+    -fx-fill: #f4ddec;
     -fx-font-size: 12px;
+}
+
+.app-badge {
+    -fx-background-color: #f2c14e;
+    -fx-background-radius: 12px;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 9px 5px 9px;
+    -fx-text-fill: #4b183f;
 }
 
 .conversation-scroll,
 .conversation-scroll > .viewport {
-    -fx-background-color: #f4f7f2;
+    -fx-background-color: #fbf6fa;
 }
 
 .conversation-scroll {
@@ -34,7 +43,7 @@
 }
 
 .dialog-container {
-    -fx-background-color: #f4f7f2;
+    -fx-background-color: #fbf6fa;
 }
 
 .dialog-row {
@@ -49,23 +58,23 @@
 }
 
 .user-dialog .dialog-bubble {
-    -fx-background-color: #28735a;
+    -fx-background-color: #7b2c63;
     -fx-text-fill: #ffffff;
 }
 
 .nutrisoy-dialog .dialog-bubble {
     -fx-background-color: #ffffff;
-    -fx-border-color: #dce7df;
+    -fx-border-color: #ead9e6;
     -fx-border-width: 1px;
-    -fx-text-fill: #24332d;
-    -fx-effect: dropshadow(gaussian, rgba(30, 57, 46, 0.08), 5, 0, 0, 1);
+    -fx-text-fill: #352230;
+    -fx-effect: dropshadow(gaussian, rgba(75, 24, 63, 0.09), 5, 0, 0, 1);
 }
 
 .error-dialog .dialog-bubble {
-    -fx-background-color: #fff3f2;
-    -fx-border-color: #d85b51;
+    -fx-background-color: #fff0f1;
+    -fx-border-color: #c33b48;
     -fx-border-width: 1.5px;
-    -fx-text-fill: #8b2f29;
+    -fx-text-fill: #8d2530;
 }
 
 .profile-picture {
@@ -74,26 +83,26 @@
 
 .composer {
     -fx-background-color: #ffffff;
-    -fx-border-color: #dce5df transparent transparent transparent;
+    -fx-border-color: #ead9e6 transparent transparent transparent;
     -fx-border-width: 1px 0 0 0;
 }
 
 .command-input {
-    -fx-background-color: #f5f8f5;
+    -fx-background-color: #fcf8fb;
     -fx-background-radius: 9px;
-    -fx-border-color: #cbd9d0;
+    -fx-border-color: #dbc5d5;
     -fx-border-radius: 9px;
     -fx-padding: 9px 12px 9px 12px;
 }
 
 .command-input:focused {
     -fx-background-color: #ffffff;
-    -fx-border-color: #28735a;
-    -fx-effect: dropshadow(gaussian, rgba(40, 115, 90, 0.14), 5, 0, 0, 0);
+    -fx-border-color: #7b2c63;
+    -fx-effect: dropshadow(gaussian, rgba(123, 44, 99, 0.15), 5, 0, 0, 0);
 }
 
 .send-button {
-    -fx-background-color: #28735a;
+    -fx-background-color: #b64355;
     -fx-background-radius: 9px;
     -fx-cursor: hand;
     -fx-font-weight: bold;
@@ -102,22 +111,22 @@
 }
 
 .send-button:hover {
-    -fx-background-color: #1f604b;
+    -fx-background-color: #993448;
 }
 
 .send-button:pressed {
-    -fx-background-color: #174a3a;
+    -fx-background-color: #7d293b;
 }
 
 .status-text {
-    -fx-fill: #718078;
+    -fx-fill: #866779;
     -fx-font-size: 11px;
 }
 
 .error-status {
-    -fx-fill: #b33c34;
+    -fx-fill: #b02f42;
 }
 
 .ready-status {
-    -fx-fill: #4f7564;
+    -fx-fill: #7b2c63;
 }

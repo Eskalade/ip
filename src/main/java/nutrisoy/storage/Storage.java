@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -113,19 +114,39 @@ public class Storage {
                     throw new DukeException("Missing deadline date");
                 }
                 assert parts.length >= 4 : "A deadline line must contain a date";
-                LocalDate byDate = LocalDate.parse(parts[3]);
+                LocalDate byDate;
+                try {
+                    byDate = LocalDate.parse(parts[3]);
+                    tagFieldIndex = 4;
+                } catch (DateTimeParseException e) {
+                    if (parts.length < 5) {
+                        throw new DukeException("Invalid deadline date");
+                    }
+                    byDate = LocalDate.parse(parts[4]);
+                    tagFieldIndex = 3;
+                }
                 task = new Deadline(description, byDate);
-                tagFieldIndex = 4;
                 break;
             case "E":
                 if (parts.length < 5) {
                     throw new DukeException("Missing event timeline");
                 }
                 assert parts.length >= 5 : "An event line must contain two dates";
-                LocalDate fromDate = LocalDate.parse(parts[3]);
-                LocalDate toDate = LocalDate.parse(parts[4]);
+                LocalDate fromDate;
+                LocalDate toDate;
+                try {
+                    fromDate = LocalDate.parse(parts[3]);
+                    toDate = LocalDate.parse(parts[4]);
+                    tagFieldIndex = 5;
+                } catch (DateTimeParseException e) {
+                    if (parts.length < 6) {
+                        throw new DukeException("Invalid event timeline");
+                    }
+                    fromDate = LocalDate.parse(parts[4]);
+                    toDate = LocalDate.parse(parts[5]);
+                    tagFieldIndex = 3;
+                }
                 task = new Event(description, fromDate, toDate);
-                tagFieldIndex = 5;
                 break;
             default:
                 throw new DukeException("Unknown task type");

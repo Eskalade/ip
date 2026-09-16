@@ -28,7 +28,7 @@ public class MainWindow {
 
     private Duke duke;
     private Image userImage;
-    private Image dukeImage;
+    private Image soyaImage;
 
     /**
      * Initializes the chat window after its FXML controls have been loaded.
@@ -36,7 +36,7 @@ public class MainWindow {
     @FXML
     public void initialize() {
         userImage = loadImage("/images/DaUser.png");
-        dukeImage = loadImage("/images/DaDuke.png");
+        soyaImage = loadImage("/images/DaDuke.png");
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
@@ -49,7 +49,7 @@ public class MainWindow {
         assert duke != null : "Application backend must not be null";
         this.duke = duke;
         dialogContainer.getChildren().add(DialogBox.getNutriSoyDialog(
-                "Hi! I'm NutriSoy. What can I help you organise today?", dukeImage));
+                "Hey, I'm " + Ui.BOT_NAME + ". Drop me a task and I'll keep your chaos organised.", soyaImage));
         userInput.requestFocus();
     }
 
@@ -66,11 +66,11 @@ public class MainWindow {
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 response.isError()
-                        ? DialogBox.getErrorDialog(response.getMessage(), dukeImage)
-                        : DialogBox.getNutriSoyDialog(response.getMessage(), dukeImage)
+                        ? DialogBox.getErrorDialog(response.getMessage(), soyaImage)
+                        : DialogBox.getNutriSoyDialog(response.getMessage(), soyaImage)
         );
         userInput.clear();
-        statusText.setText(response.isError() ? "Please check the highlighted message" : "Ready");
+        statusText.setText(response.isError() ? "That command needs a makeover" : "Ready to serve");
         statusText.getStyleClass().setAll("status-text", response.isError() ? "error-status" : "ready-status");
 
         if (input.trim().equalsIgnoreCase("bye")) {
