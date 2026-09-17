@@ -1,5 +1,7 @@
 package nutrisoy.parser;
 
+import java.util.Locale;
+
 import nutrisoy.command.Command;
 import nutrisoy.command.DeadlineCommand;
 import nutrisoy.command.DeleteCommand;
@@ -36,7 +38,7 @@ public class Parser {
 
         String[] parts = trimmed.split("\\s+", 2);
         assert parts.length >= 1 : "A trimmed command must have a command word";
-        String commandWord = parts[0].toLowerCase();
+        String commandWord = parts[0].toLowerCase(Locale.ROOT);
         String arguments = parts.length > 1 ? parts[1].trim() : "";
 
         switch (commandWord) {

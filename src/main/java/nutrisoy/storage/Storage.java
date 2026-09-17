@@ -1,8 +1,12 @@
 package nutrisoy.storage;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -19,6 +23,8 @@ import nutrisoy.task.Todo;
  */
 public class Storage {
     private final String filePath;
+    // A partial or unsuccessful load must never be saved over the original file.
+    private String loadWarning = "";
 
     /**
      * Creates storage that uses the specified file path.
@@ -38,6 +44,7 @@ public class Storage {
      */
     public ArrayList<Task> loadTasks() throws DukeException {
         assert filePath != null && !filePath.isBlank() : "Storage file path must be valid";
+        loadWarning = "";
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
 
@@ -45,10 +52,11 @@ public class Storage {
             return tasks;
         }
         if (!file.isFile() || !file.canRead()) {
-            throw new DukeException("The storage path is not a readable file: " + filePath);
+            loadWarning = "The storage path is not a readable file: " + filePath;
+            throw new DukeException(loadWarning + " Fix the file and restart NutriSoy.");
         }
 
-        try (Scanner scanner = new Scanner(file)) {
+        try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8)) {
             int lineNumber = 0;
             while (scanner.hasNextLine()) {
                 lineNumber++;
@@ -62,12 +70,16 @@ public class Storage {
                         throw new DukeException("Duplicate task");
                     }
                     tasks.add(task);
-                } catch (Exception e) {
-                    System.out.println(" Warning: Skipping invalid data on line " + lineNumber + ".");
+                } catch (DukeException | IllegalArgumentException | DateTimeParseException e) {
+                    loadWarning += "Invalid data on line " + lineNumber + ". ";
                 }
             }
-        } catch (IOException e) {
-            throw new DukeException("I couldn't read the task file. Check that it is accessible.");
+            if (scanner.ioException() != null) {
+                throw scanner.ioException();
+            }
+        } catch (IOException | SecurityException e) {
+            loadWarning = "I couldn't read the task file. Check that it is accessible.";
+            throw new DukeException(loadWarning + " Fix the file and restart NutriSoy.");
         }
 
         return tasks;
@@ -81,6 +93,8 @@ public class Storage {
      */
     public void saveTasks(ArrayList<Task> tasks) throws DukeException {
         assert tasks != null : "Tasks to save must not be null";
+        requireSafeSave();
+        Path temporaryFile = null;
         try {
             File file = new File(filePath);
             File parentDir = file.getParentFile();
@@ -91,19 +105,59 @@ public class Storage {
                 throw new DukeException("The configured data location is not a directory.");
             }
 
-            try (FileWriter writer = new FileWriter(file)) {
+            Path target = file.toPath().toAbsolutePath();
+            if (Files.isDirectory(target) || Files.isSymbolicLink(target)) {
+                throw new DukeException("The storage path must be a regular file, not a directory or symbolic link.");
+            }
+            temporaryFile = Files.createTempFile(target.getParent(), "nutrisoy-", ".tmp");
+            try (var writer = Files.newBufferedWriter(temporaryFile, StandardCharsets.UTF_8)) {
                 for (Task task : tasks) {
                     writer.write(task.toFileFormat() + System.lineSeparator());
                 }
             }
-        } catch (IOException e) {
+            try {
+                Files.move(temporaryFile, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException e) {
+                throw new DukeException("This location does not support safe file replacement. "
+                        + "Use a local writable folder; the original task file was kept.");
+            }
+        } catch (IOException | SecurityException e) {
             throw new DukeException("I couldn't save your tasks. Check the data file permissions and try again.");
+        } finally {
+            if (temporaryFile != null) {
+                try {
+                    Files.deleteIfExists(temporaryFile);
+                } catch (IOException | SecurityException e) {
+                    // A leftover temporary file is safer than touching the original task file.
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns load diagnostics together with advice for restoring writable storage.
+     *
+     * @return warning text, or an empty string if all data loaded successfully
+     */
+    public String getLoadWarning() {
+        return loadWarning.isEmpty() ? "" : loadWarning + " Task changes are disabled. "
+                + "Back up and repair the task file, then restart NutriSoy. You can still use list, find, and bye.";
+    }
+
+    /**
+     * Prevents saving a partial or failed load over the user's original data.
+     *
+     * @throws DukeException if the file needs recovery before changes are safe
+     */
+    public void requireSafeSave() throws DukeException {
+        if (!loadWarning.isEmpty()) {
+            throw new DukeException(getLoadWarning());
         }
     }
 
     private Task parseLineToTask(String line) throws DukeException {
         assert line != null : "Storage line must not be null";
-        String[] parts = line.split(" \\| ", -1);
+        String[] parts = line.split("\\s*\\|\\s*", -1);
         if (parts.length < 3) {
             throw new DukeException("Corrupted format");
         }

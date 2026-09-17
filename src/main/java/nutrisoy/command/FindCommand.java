@@ -21,6 +21,12 @@ public class FindCommand extends Command {
         this.keyword = keyword;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean changesTasks() {
+        return false;
+    }
+
     /**
      * Finds matching tasks and displays them to the user.
      *

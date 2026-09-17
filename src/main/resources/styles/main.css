@@ -77,8 +77,20 @@
     -fx-text-fill: #8d2530;
 }
 
-.profile-picture {
-    -fx-opacity: 0.92;
+.avatar {
+    -fx-background-radius: 18px;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.user-dialog .avatar {
+    -fx-background-color: #7b2c63;
+    -fx-text-fill: #ffffff;
+}
+
+.nutrisoy-dialog .avatar {
+    -fx-background-color: #f2c14e;
+    -fx-text-fill: #4b183f;
 }
 
 .composer {

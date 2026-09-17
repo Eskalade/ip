@@ -1,12 +1,10 @@
 package nutrisoy.ui;
 
-import java.io.InputStream;
-
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import nutrisoy.Duke;
@@ -27,17 +25,15 @@ public class MainWindow {
     private Text statusText;
 
     private Duke duke;
-    private Image userImage;
-    private Image soyaImage;
 
     /**
      * Initializes the chat window after its FXML controls have been loaded.
      */
     @FXML
     public void initialize() {
-        userImage = loadImage("/images/DaUser.png");
-        soyaImage = loadImage("/images/DaDuke.png");
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        // Scroll after layout adds a reply, while leaving the scrollbar free for manual reading.
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+                Platform.runLater(() -> scrollPane.setVvalue(1.0)));
     }
 
     /**
@@ -49,7 +45,12 @@ public class MainWindow {
         assert duke != null : "Application backend must not be null";
         this.duke = duke;
         dialogContainer.getChildren().add(DialogBox.getNutriSoyDialog(
-                "Hey, I'm " + Ui.BOT_NAME + ". Drop me a task and I'll keep your chaos organised.", soyaImage));
+                "Hey, I'm " + Ui.BOT_NAME + ". Drop me a task and I'll keep your chaos organised."));
+        if (!duke.getStartupWarning().isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getErrorDialog(duke.getStartupWarning()));
+            statusText.setText("Saved tasks need attention");
+            statusText.getStyleClass().add("error-status");
+        }
         userInput.requestFocus();
     }
 
@@ -64,32 +65,18 @@ public class MainWindow {
         }
         GuiResponse response = duke.getGuiResponse(input);
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getUserDialog(input),
                 response.isError()
-                        ? DialogBox.getErrorDialog(response.getMessage(), soyaImage)
-                        : DialogBox.getNutriSoyDialog(response.getMessage(), soyaImage)
+                        ? DialogBox.getErrorDialog(response.getMessage())
+                        : DialogBox.getNutriSoyDialog(response.getMessage())
         );
         userInput.clear();
         statusText.setText(response.isError() ? "That command needs a makeover" : "Ready to serve");
         statusText.getStyleClass().setAll("status-text", response.isError() ? "error-status" : "ready-status");
 
-        if (input.trim().equalsIgnoreCase("bye")) {
+        if (response.isExit()) {
             javafx.application.Platform.exit();
         }
     }
 
-    /**
-     * Loads an image stored in the application's resources.
-     *
-     * @param resourcePath absolute classpath path to the image
-     * @return loaded image
-     */
-    private Image loadImage(String resourcePath) {
-        assert resourcePath != null : "Image resource path must not be null";
-        InputStream imageStream = MainWindow.class.getResourceAsStream(resourcePath);
-        if (imageStream == null) {
-            throw new IllegalStateException("Missing image resource: " + resourcePath);
-        }
-        return new Image(imageStream);
-    }
 }

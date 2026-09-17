@@ -6,6 +6,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import nutrisoy.Duke;
 
@@ -24,14 +26,28 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
         Parent root = loader.load();
         MainWindow mainWindow = loader.getController();
-        mainWindow.setDuke(new Duke(Duke.DEFAULT_STORAGE_PATH));
+        Duke duke = new Duke(Duke.DEFAULT_STORAGE_PATH);
+        mainWindow.setDuke(duke);
 
-        stage.setTitle(Ui.BOT_NAME + " - NutriSoy");
+        stage.setTitle("NutriSoy - " + Ui.BOT_NAME);
         Scene scene = new Scene(root);
         scene.getStylesheets().add(Main.class.getResource("/styles/main.css").toExternalForm());
         stage.setScene(scene);
         stage.setMinWidth(440);
         stage.setMinHeight(480);
+        stage.setOnCloseRequest(event -> {
+            if (duke.hasUnsavedChanges()) {
+                Alert warning = new Alert(Alert.AlertType.CONFIRMATION,
+                        "Some changes have not been saved. Close and discard those changes?",
+                        ButtonType.CANCEL, ButtonType.YES);
+                warning.initOwner(stage);
+                warning.setTitle("NutriSoy - Unsaved changes");
+                warning.setHeaderText("Your tasks need a save first");
+                if (warning.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.YES) {
+                    event.consume();
+                }
+            }
+        });
         stage.show();
     }
 }

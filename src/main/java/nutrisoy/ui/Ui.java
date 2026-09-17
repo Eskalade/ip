@@ -53,7 +53,7 @@ public class Ui {
      * @return command read from standard input
      */
     public String readCommand() {
-        return scanner.nextLine();
+        return scanner.hasNextLine() ? scanner.nextLine() : null;
     }
 
     /**
@@ -80,7 +80,7 @@ public class Ui {
      */
     public void showLoadingError(String details) {
         assert details != null : "Loading error details must not be null";
-        showMessage(" Your save file chose chaos. I'm starting with a clean list.");
+        showMessage(" Your save file needs attention. Task changes are disabled to protect your data.");
         showMessage(" " + details);
     }
 
@@ -221,7 +221,7 @@ public class Ui {
      *
      * @param message text to display or capture
      */
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         assert message != null : "Displayed message must not be null";
         if (capturedOutput == null) {
             System.out.println(message);
