@@ -28,5 +28,5 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Run tests and quality checks
-        run: ./gradlew clean check
+      - name: Run tests, quality checks, and release packaging
+        run: ./gradlew clean check shadowJar

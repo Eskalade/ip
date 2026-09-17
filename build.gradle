@@ -15,6 +15,14 @@ repositories {
     mavenCentral()
 }
 
+// Keep native libraries in platform-specific folders to avoid Mac architecture collisions.
+def releasePlatforms = ['win', 'linux', 'mac', 'mac-aarch64']
+releasePlatforms.each { platform ->
+    configurations.create("javafxRelease_${platform}") {
+        transitive = false
+    }
+}
+
 dependencies {
     String jUnitVersion = '5.14.4'
 
@@ -22,6 +30,11 @@ dependencies {
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
+    releasePlatforms.each { platform ->
+        ['base', 'graphics', 'controls', 'fxml'].each { module ->
+            add("javafxRelease_${platform}", "org.openjfx:javafx-${module}:25.0.1:${platform}")
+        }
+    }
 }
 
 javafx {
@@ -57,6 +70,23 @@ jar {
 
 shadowJar {
     archiveFileName = 'nutrisoy.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    // Include the union of platform-specific JavaFX classes, but isolate natives.
+    releasePlatforms.each { platform ->
+        def platformJars = project.configurations.getByName("javafxRelease_${platform}")
+        from({ platformJars.collect { zipTree(it) } }) {
+            exclude '*.dll', '*.so', '*.dylib', 'module-info.class', 'META-INF/versions/**/module-info.class'
+        }
+        from({ platformJars.collect { zipTree(it) } }) {
+            include '*.dll', '*.so', '*.dylib'
+            into "natives/${platform}"
+        }
+    }
+    eachFile { entry ->
+        if (!entry.path.startsWith('natives/') && entry.name ==~ /.*\.(dll|so|dylib)/) {
+            entry.exclude()
+        }
+    }
 }
 
 run {

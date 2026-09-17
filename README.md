@@ -42,8 +42,11 @@ Run the bundle with Java 25:
 java -jar build/libs/nutrisoy.jar
 ```
 
-JavaFX native dependencies are platform-specific. Build and smoke-test on the
-target OS/architecture; do not assume a macOS-built JAR works on Windows or Linux.
+The release JAR bundles JavaFX for Windows x64, Linux x64, and macOS on Intel
+and Apple Silicon. Use Java 25 matching a supported architecture and a graphical
+desktop environment. Linux needs the system GTK 3 libraries used by JavaFX.
+Windows/Linux ARM runtimes are not supported by this bundle. Cross-platform
+packaging does not replace smoke testing on each target OS.
 The repository name remains `ip`.
 
 The [testing guide](docs/testing.md) describes automated coverage and the manual

@@ -65,3 +65,21 @@ when performing manual checks. Do not count an unperformed check as passed.
   snapshots were inspected, and the User Guide screenshot was refreshed.
 - Windows/Linux GUI behavior, physical high-DPI displays, and mouse/keyboard
   interaction with the close-confirmation dialog still need manual verification.
+
+## Release v0.2 verification (17 September 2026)
+
+- Java 25 was confirmed before `./gradlew clean check shadowJar`; all 163
+  JUnit cases and Checkstyle passed, including native-platform selection tests.
+- The fat JAR contains JavaFX classes and separate native directories for
+  Windows x64, Linux x64, macOS Intel, and macOS Apple Silicon. This supersedes
+  the earlier single-platform packaging limitation.
+- The JAR launched using `java -jar nutrisoy.jar` from an isolated folder on
+  macOS ARM64. A second launch excluded the JDK's bundled JavaFX modules and
+  verified that JavaFX loaded libraries extracted from this JAR.
+- The packaged-JavaFX GUI harness passed todo, tag, mark, list, invalid-date,
+  and persistence checks. JavaFX classpath/native-access warnings are not
+  themselves launch failures.
+- Windows, Linux, and Intel Mac runtime smoke tests remain unperformed here.
+  Ask a teammate on another supported OS to download the release JAR, launch
+  it from an empty folder, add all task types, tag and mark a task, then exit
+  and reopen to check persistence. Record the OS, Java version, and outcome.
