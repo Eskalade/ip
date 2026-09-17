@@ -19,19 +19,21 @@ avatars are original JavaFX/CSS elements, created with AI assistance; see the
 
 ## Quick start
 
-1. Install Java 25 and download or clone the [project](https://github.com/Eskalade/ip).
-   Open a terminal in the project directory.
-2. Run `./gradlew run` (Windows: `gradlew.bat run`).
+1. Install Java 25 and download **nutrisoy.jar** from the
+   [latest release](https://github.com/Eskalade/ip/releases/latest).
+   Put it in a writable folder and open a terminal in that folder.
+2. Run `java -jar nutrisoy.jar`.
 3. Type `todo read a book`, then press Enter or click **Do it**.
 4. Type `list` to see saved tasks. Type `bye` to exit.
 
-To build a JAR, run `./gradlew clean build`, then
-`java -jar build/libs/nutrisoy.jar`. Build on the target OS/architecture because
-JavaFX includes native components. Use a writable working directory.
+The bundle supports Windows x64, Linux x64, and macOS Intel/Apple Silicon.
+Use a Java 25 runtime matching one of those architectures. Linux also needs a
+graphical desktop and GTK 3 libraries. Windows/Linux ARM runtimes are not bundled.
+Keep using the same working folder so NutriSoy finds your saved tasks.
 
-If you already have a compatible `nutrisoy.jar`, put it in a writable folder,
-open a terminal there, and run `java -jar nutrisoy.jar` with Java 25.
-Keep using that folder so NutriSoy finds your saved tasks.
+To build from source, download or clone the [project](https://github.com/Eskalade/ip)
+and run `./gradlew clean shadowJar` in the project directory (Windows:
+`gradlew.bat clean shadowJar`). The result is `build/libs/nutrisoy.jar`.
 
 ## Command reference
 
