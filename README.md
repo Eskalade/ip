@@ -24,7 +24,8 @@ sdk use java 25.0.3.fx-zulu
 ```
 
 Try `todo read a book`, then `list`. Enter commands in the text field and press
-Enter or click **Do it**. See the [User Guide](docs/README.md) for every command,
+Enter or click **Do it**. See the [product website](https://Eskalade.github.io/ip/)
+or [User Guide source](docs/README.md) for every command,
 examples, validation rules, and storage recovery instructions.
 
 ## Build and test

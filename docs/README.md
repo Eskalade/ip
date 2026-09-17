@@ -1,17 +1,26 @@
-# NutriSoy User Guide
+---
+title: NutriSoy — Soya User Guide
+permalink: /
+---
+
+# NutriSoy — Soya User Guide
 
 Meet **Soya**, NutriSoy's sassy task sidekick. NutriSoy is a desktop chatbot for
 keeping todos, deadlines, events, and tags in one local task list.
 
-![NutriSoy showing Soya's task and tag responses](ui.png)
+![The full NutriSoy window showing Soya, a completed tagged todo, a deadline, and an event](Ui.png)
 
 Screenshot rendered from NutriSoy on macOS using sample tasks. The S and You
 avatars are original JavaFX/CSS elements, created with AI assistance; see the
-[acknowledgements](../README.md#acknowledgements).
+[acknowledgements](https://github.com/Eskalade/ip#acknowledgements).
+
+[Quick start](#quick-start) · [Commands](#command-reference) ·
+[Errors](#errors-and-recovery) · [Saved data](#your-saved-data)
 
 ## Quick start
 
-1. Install Java 25 and open a terminal in the project directory.
+1. Install Java 25 and download or clone the [project](https://github.com/Eskalade/ip).
+   Open a terminal in the project directory.
 2. Run `./gradlew run` (Windows: `gradlew.bat run`).
 3. Type `todo read a book`, then press Enter or click **Do it**.
 4. Type `list` to see saved tasks. Type `bye` to exit.
@@ -20,12 +29,17 @@ To build a JAR, run `./gradlew clean build`, then
 `java -jar build/libs/nutrisoy.jar`. Build on the target OS/architecture because
 JavaFX includes native components. Use a writable working directory.
 
+If you already have a compatible `nutrisoy.jar`, put it in a writable folder,
+open a terminal there, and run `java -jar nutrisoy.jar` with Java 25.
+Keep using that folder so NutriSoy finds your saved tasks.
+
 ## Command reference
 
 Replace uppercase placeholders with your own values; do not type the placeholders
 or square brackets. Command words are case-insensitive. Leading/trailing spaces,
 multiple spaces, and tabs between arguments are accepted. Date parameters such
 as `/by` must be lowercase standalone tokens separated by whitespace.
+Write dates as `yyyy-MM-dd`, for example `2026-09-25`.
 
 | Action | Format | Example |
 | --- | --- | --- |
@@ -40,6 +54,11 @@ as `/by` must be lowercase standalone tokens separated by whitespace.
 | Add a tag | `tag INDEX TAG` | `tag 1 school` |
 | Remove a tag | `untag INDEX TAG` | `untag 1 school` |
 | Exit | `bye` | `bye` |
+
+Try this on an empty list: `todo read a book`, `tag 1 school`, `mark 1`,
+then `list`. You should see `1.[T][X] read a book #school`. Use `unmark 1`
+to reopen it and `untag 1 school` to remove the tag. `delete 1` permanently
+removes the task; `bye` saves any pending changes and closes the app.
 
 ## Adding and managing tasks
 
@@ -129,5 +148,5 @@ against the same file, since concurrent editing is not supported.
 
 ## Acknowledgements
 
-See the [project README](../README.md#acknowledgements) for the starter project,
-JavaFX tutorial, libraries, AI assistance, and profile-image provenance status.
+See the [project README](https://github.com/Eskalade/ip#acknowledgements) for
+the starter project, JavaFX tutorial, libraries, AI assistance, and avatar credits.
