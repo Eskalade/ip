@@ -44,3 +44,24 @@ working directory or a backup of your data file for manual testing.
 
 Record OS, Java version, screen size, language setting, result, and any issue
 when performing manual checks. Do not count an unperformed check as passed.
+
+## Submission verification (17 September 2026)
+
+- Java 25.0.3.fx-zulu, macOS ARM64: JUnit, Checkstyle, and packaging checked.
+- All 161 JUnit cases passed. The packaged `nutrisoy.jar` also launched from
+  an isolated directory with the JDK's bundled JavaFX modules excluded, verifying
+  that the JAR contains its own JavaFX dependencies. JavaFX emitted classpath and
+  native-access warnings; no FXML loading error occurred.
+- Regression tests include damaged-file write protection, safe-save retry,
+  exit after save failure, empty console input, UTF-8 descriptions, and uppercase
+  commands under a Turkish JVM locale. This is not a full OS-language test.
+- An isolated JavaFX smoke harness loaded the packaged FXML/CSS and submitted
+  todo, tag, mark, list, and invalid-date commands using temporary task data.
+  App snapshots were inspected at normal and small window sizes; replies and
+  error text wrapped, and the composer remained visible.
+- After replacing the profile PNGs with JavaFX/CSS avatars, the clean build and
+  all 161 tests passed again. The GUI harness verified nine text-avatar nodes
+  and no ImageView nodes for the sample conversation. Normal and small-window
+  snapshots were inspected, and the User Guide screenshot was refreshed.
+- Windows/Linux GUI behavior, physical high-DPI displays, and mouse/keyboard
+  interaction with the close-confirmation dialog still need manual verification.
