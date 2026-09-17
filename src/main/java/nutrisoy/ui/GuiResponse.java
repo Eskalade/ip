@@ -6,6 +6,7 @@ package nutrisoy.ui;
 public class GuiResponse {
     private final String message;
     private final boolean error;
+    private final boolean exit;
 
     /**
      * Creates a graphical response.
@@ -14,9 +15,21 @@ public class GuiResponse {
      * @param error whether the response describes an error
      */
     public GuiResponse(String message, boolean error) {
+        this(message, error, false);
+    }
+
+    /**
+     * Creates a response including whether the application may safely exit.
+     *
+     * @param message response text
+     * @param error whether processing failed
+     * @param exit whether a successfully processed command requests exit
+     */
+    public GuiResponse(String message, boolean error, boolean exit) {
         assert message != null : "GUI response message must not be null";
         this.message = message;
         this.error = error;
+        this.exit = exit && !error;
     }
 
     /**
@@ -35,5 +48,14 @@ public class GuiResponse {
      */
     public boolean isError() {
         return error;
+    }
+
+    /**
+     * Returns whether this response permits closing the application.
+     *
+     * @return true after a successful exit command
+     */
+    public boolean isExit() {
+        return exit;
     }
 }

@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -81,16 +82,83 @@ public class DukeTest {
 
     @Test
     public void constructor_unreadablePath_reportsLoadFailure() {
-        PrintStream original = System.out;
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        try (PrintStream capture = new PrintStream(output, true, StandardCharsets.UTF_8)) {
-            System.setOut(capture);
-            Duke duke = new Duke(directory.toString());
-            assertTrue(duke.getGuiResponse("list").isError());
-            assertTrue(output.toString(StandardCharsets.UTF_8).contains("not a readable file"));
+        Duke duke = new Duke(directory.toString());
+        assertFalse(duke.getGuiResponse("list").isError());
+        assertTrue(duke.getStartupWarning().contains("not a readable file"));
+        assertTrue(duke.getGuiResponse("todo read").isError());
+    }
+
+    @Test
+    public void damagedFile_blocksChangesWithoutOverwritingReadableTasks() throws Exception {
+        Path file = directory.resolve("damaged.txt");
+        String original = "T | 0 | read\nnot a task\n";
+        Files.writeString(file, original);
+        Duke duke = new Duke(file.toString());
+        assertTrue(duke.getStartupWarning().contains("line 2"));
+        assertTrue(duke.getResponse("list").contains("read"));
+        assertFalse(duke.getGuiResponse("find read").isError());
+        assertTrue(duke.getGuiResponse("todo write").isError());
+        assertFalse(duke.getResponse("list").contains("write"));
+        assertTrue(duke.getGuiResponse("bye").isExit());
+        assertEquals(original, Files.readString(file));
+    }
+
+    @Test
+    public void failedSave_blocksExitUntilRetrySucceeds() throws Exception {
+        Path blocker = directory.resolve("blocker");
+        Files.writeString(blocker, "keep");
+        Duke duke = new Duke(blocker.resolve("tasks.txt").toString());
+        GuiResponse response = duke.getGuiResponse("todo read");
+        assertTrue(response.isError());
+        assertFalse(response.getMessage().contains("I added"));
+        assertTrue(response.getMessage().contains("only in this session"));
+        assertTrue(duke.hasUnsavedChanges());
+        assertFalse(duke.getGuiResponse("bye").isExit());
+        Files.move(blocker, directory.resolve("original.txt"));
+        assertTrue(duke.getGuiResponse("bye").isExit());
+        assertFalse(duke.hasUnsavedChanges());
+        assertEquals(List.of("T | 0 | read"), Files.readAllLines(blocker.resolve("tasks.txt")));
+    }
+
+    @Test
+    public void emptyStartup_readOnlyCommands_doNotCreateDataFile() {
+        Path file = directory.resolve("missing.txt");
+        Duke duke = new Duke(file.toString());
+        assertEquals("", duke.getStartupWarning());
+        assertFalse(duke.getGuiResponse("list").isError());
+        assertFalse(duke.getGuiResponse("find missing").isError());
+        assertTrue(duke.getGuiResponse("bye").isExit());
+        assertFalse(Files.exists(file));
+    }
+
+    @Test
+    public void nonEnglishLocale_uppercaseCommandsAndUnicode_surviveRestart() {
+        Locale original = Locale.getDefault();
+        Path file = directory.resolve("unicode.txt");
+        try {
+            Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+            Duke duke = new Duke(file.toString());
+            assertFalse(duke.getGuiResponse("DEADLINE 阅读 /by 2028-02-29").isError());
+            assertFalse(duke.getGuiResponse("FIND 阅读").isError());
+            assertTrue(new Duke(file.toString()).getResponse("LIST").contains("阅读"));
         } finally {
-            System.setOut(original);
+            Locale.setDefault(original);
         }
+    }
+
+    @Test
+    public void run_endOfInput_stopsCleanly() {
+        InputStream originalInput = System.in;
+        PrintStream originalOutput = System.out;
+        try (PrintStream capture = new PrintStream(new ByteArrayOutputStream())) {
+            System.setIn(new ByteArrayInputStream(new byte[0]));
+            System.setOut(capture);
+            new Duke(directory.resolve("eof.txt").toString()).run();
+        } finally {
+            System.setIn(originalInput);
+            System.setOut(originalOutput);
+        }
+        assertFalse(Files.exists(directory.resolve("eof.txt")));
     }
 
     @Test

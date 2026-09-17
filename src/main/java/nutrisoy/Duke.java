@@ -18,6 +18,8 @@ public class Duke {
     private final Storage storage;
     private TaskList tasks;
     private final Ui ui;
+    private String startupWarning = "";
+    private boolean unsavedChanges;
 
     /**
      * Creates the application and loads tasks from the specified storage file.
@@ -30,8 +32,9 @@ public class Duke {
         storage = new Storage(filePath);
         try {
             tasks = new TaskList(storage.loadTasks());
+            startupWarning = storage.getLoadWarning();
         } catch (DukeException e) {
-            ui.showLoadingError(e.getMessage());
+            startupWarning = e.getMessage();
             tasks = new TaskList();
         }
     }
@@ -41,21 +44,42 @@ public class Duke {
      */
     public void run() {
         ui.showWelcome();
+        if (!startupWarning.isEmpty()) {
+            ui.showLoadingError(startupWarning);
+        }
         boolean isExit = false;
         while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                ui.showLine();
-                Command c = Parser.parse(fullCommand);
-                c.execute(tasks, ui);
-                isExit = c.isExit();
-                storage.saveTasks(tasks.getTasks());
-            } catch (DukeException e) {
-                ui.showError(e.getMessage());
-            } finally {
-                ui.showLine();
+            String fullCommand = ui.readCommand();
+            if (fullCommand == null) {
+                if (unsavedChanges) {
+                    ui.showError("Input closed with unsaved changes. Check the earlier storage error.");
+                }
+                break;
             }
+            ui.showLine();
+            GuiResponse response = getGuiResponse(fullCommand);
+            ui.showMessage(response.getMessage());
+            isExit = response.isExit();
+            ui.showLine();
         }
+    }
+
+    /**
+     * Returns startup diagnostics for display by either user interface.
+     *
+     * @return warning and recovery advice, or an empty string after a complete load
+     */
+    public String getStartupWarning() {
+        return startupWarning;
+    }
+
+    /**
+     * Indicates whether closing the window would discard unsaved session changes.
+     *
+     * @return true if a previous save failed
+     */
+    public boolean hasUnsavedChanges() {
+        return unsavedChanges;
     }
 
     /**
@@ -75,18 +99,30 @@ public class Duke {
      * @return response text and its error status
      */
     public GuiResponse getGuiResponse(String input) {
-        assert input != null : "Command input must not be null";
         ui.startCapturingOutput();
         boolean isError = false;
+        boolean isExit = false;
         try {
             Command command = Parser.parse(input);
+            if (command.changesTasks()) {
+                storage.requireSafeSave();
+            }
             command.execute(tasks, ui);
-            storage.saveTasks(tasks.getTasks());
+            unsavedChanges = unsavedChanges || command.changesTasks();
+            if (unsavedChanges) {
+                storage.saveTasks(tasks.getTasks());
+                unsavedChanges = false;
+            }
+            isExit = command.isExit();
         } catch (DukeException e) {
             isError = true;
+            ui.startCapturingOutput();
             ui.showError(e.getMessage());
+            if (unsavedChanges) {
+                ui.showMessage(" Changes remain only in this session. Fix storage, then use list to retry saving.");
+            }
         }
-        return new GuiResponse(ui.stopCapturingOutput(), isError);
+        return new GuiResponse(ui.stopCapturingOutput(), isError, isExit);
     }
 
     /**

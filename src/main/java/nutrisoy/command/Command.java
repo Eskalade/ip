@@ -137,4 +137,13 @@ public abstract class Command {
     public boolean isExit() {
         return false;
     }
+
+    /**
+     * Indicates whether execution may change the task list or a task's state.
+     *
+     * @return true for commands that require writable storage
+     */
+    public boolean changesTasks() {
+        return true;
+    }
 }

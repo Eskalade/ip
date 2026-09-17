@@ -51,12 +51,12 @@ jar {
     manifest {
         attributes 'Main-Class': 'nutrisoy.ui.Launcher'
     }
-    archiveBaseName = 'duke'
+    archiveBaseName = 'nutrisoy'
     archiveVersion = '0.1.0'
 }
 
 shadowJar {
-    archiveFileName = 'duke.jar'
+    archiveFileName = 'nutrisoy.jar'
 }
 
 run {

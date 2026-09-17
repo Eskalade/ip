@@ -11,40 +11,36 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Circle;
 
 /**
- * Represents a dialog box consisting of an ImageView to represent the speaker's face
- * and a label containing text from the speaker.
+ * Represents a chat message with a text avatar identifying the speaker.
  */
 public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
-    private ImageView displayPicture;
+    private Label avatar;
 
-    private DialogBox(String text, Image img) {
-        assert text != null && img != null : "Dialog text and image must not be null";
+    private DialogBox(String text, String speaker) {
+        assert text != null : "Dialog text must not be null";
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Unable to load the NutriSoy conversation layout", e);
         }
 
         dialog.setText(text);
-        displayPicture.setImage(img);
-        displayPicture.setClip(new Circle(18, 18, 18));
+        avatar.setText(speaker);
+        avatar.setAccessibleText(speaker.equals("S") ? "Soya" : "You");
         dialog.maxWidthProperty().bind(Bindings.min(widthProperty().multiply(0.76), 560));
     }
 
     /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
+     * Places the avatar on the left and the message on the right.
      */
     private void flip() {
         ObservableList<Node> tmp = FXCollections.observableArrayList(this.getChildren());
@@ -53,16 +49,26 @@ public class DialogBox extends HBox {
         setAlignment(Pos.TOP_LEFT);
     }
 
-    public static DialogBox getUserDialog(String text, Image img) {
-        assert text != null && img != null : "Dialog text and image must not be null";
-        DialogBox dialogBox = new DialogBox(text, img);
+    /**
+     * Creates a user message with a You avatar.
+     *
+     * @param text message to display
+     * @return user dialog box
+     */
+    public static DialogBox getUserDialog(String text) {
+        DialogBox dialogBox = new DialogBox(text, "You");
         dialogBox.getStyleClass().add("user-dialog");
         return dialogBox;
     }
 
-    public static DialogBox getNutriSoyDialog(String text, Image img) {
-        assert text != null && img != null : "Dialog text and image must not be null";
-        var db = new DialogBox(text, img);
+    /**
+     * Creates a Soya response with an S avatar.
+     *
+     * @param text response to display
+     * @return app dialog box
+     */
+    public static DialogBox getNutriSoyDialog(String text) {
+        var db = new DialogBox(text, "S");
         db.getStyleClass().add("nutrisoy-dialog");
         db.flip();
         return db;
@@ -72,12 +78,10 @@ public class DialogBox extends HBox {
      * Creates an app response styled to make command errors easy to notice.
      *
      * @param text error message to display
-     * @param img app profile image
      * @return dialog box with error styling
      */
-    public static DialogBox getErrorDialog(String text, Image img) {
-        assert text != null && img != null : "Dialog text and image must not be null";
-        DialogBox dialogBox = new DialogBox(text, img);
+    public static DialogBox getErrorDialog(String text) {
+        DialogBox dialogBox = new DialogBox(text, "S");
         dialogBox.getStyleClass().addAll("nutrisoy-dialog", "error-dialog");
         dialogBox.flip();
         return dialogBox;

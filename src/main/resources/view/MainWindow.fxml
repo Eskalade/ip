@@ -20,7 +20,7 @@
                 <VBox spacing="2.0">
                     <children>
                         <Text styleClass="app-title" text="SOYA ✦" />
-                        <Text styleClass="app-subtitle" text="Your sassy task sidekick" />
+                        <Text styleClass="app-subtitle" text="NutriSoy · Your sassy task sidekick" />
                     </children>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS" />

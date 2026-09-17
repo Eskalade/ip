@@ -35,6 +35,42 @@ public class StorageBoundaryTest {
     }
 
     @Test
+    public void partialLoad_saveBlocked_preservesOriginalFile() throws Exception {
+        Path file = directory.resolve("partial.txt");
+        String original = "T | 0 | read\nbroken\n";
+        Files.writeString(file, original);
+        Storage storage = new Storage(file.toString());
+        ArrayList<Task> recovered = storage.loadTasks();
+        assertEquals(1, recovered.size());
+        assertTrue(storage.getLoadWarning().contains("line 2"));
+        assertThrows(DukeException.class, () -> storage.saveTasks(recovered));
+        assertEquals(original, Files.readString(file));
+    }
+
+    @Test
+    public void save_replacement_leavesNoTemporaryFiles() throws Exception {
+        Path file = directory.resolve("replace.txt");
+        Files.writeString(file, "T | 0 | old\n");
+        Storage storage = new Storage(file.toString());
+        storage.loadTasks();
+        storage.saveTasks(new ArrayList<>(List.of(new Todo("new"))));
+        assertEquals(List.of("T | 0 | new"), Files.readAllLines(file));
+        try (Stream<Path> paths = Files.list(directory)) {
+            assertEquals(List.of(file), paths.toList());
+        }
+    }
+
+    @Test
+    public void load_emptyTrailingTagsAndPaddedFields_preservesTasks() throws Exception {
+        Path file = directory.resolve("spaces.txt");
+        Files.writeString(file, "T | 0 | read | \nD | 1 | report | 2028-02-29 | \n");
+        Storage storage = new Storage(file.toString());
+        assertEquals(List.of("T | 0 | read", "D | 1 | report | 2028-02-29"),
+                storage.loadTasks().stream().map(Task::toFileFormat).toList());
+        assertEquals("", storage.getLoadWarning());
+    }
+
+    @Test
     public void save_nestedDirectoryAndEmptyList_createsThenClearsFile() throws Exception {
         Path file = directory.resolve("nested/data/tasks.txt");
         Storage storage = new Storage(file.toString());
