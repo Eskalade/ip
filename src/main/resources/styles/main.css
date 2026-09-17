@@ -89,7 +89,7 @@
 }
 
 .nutrisoy-dialog .avatar {
-    -fx-background-color: #f2c14e;
+    -fx-background-color: transparent;
     -fx-text-fill: #4b183f;
 }
 

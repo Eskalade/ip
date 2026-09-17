@@ -82,10 +82,13 @@ remain viewable with `list` and `find`.
   automated checks. Vincent remains responsible for reviewing, understanding,
   and verifying the submitted work. Automated checks do not establish that all
   GUI/platform behavior has been manually tested.
-- **Avatars and screenshot:** The current S and You avatars are original
-  JavaFX labels styled with CSS, created with ChatGPT/Codex assistance. No
-  third-party profile images are bundled. The User Guide screenshot was rendered
-  from the application with these avatars and sample task data.
+- **Avatars and screenshot:** Vincent used OpenAI's built-in image-generation
+  tool through ChatGPT/Codex to generate `src/main/resources/images/soya-carton.png`
+  for Soya. It was generated without a reference image, real brand names, or
+  logos. The You avatar is a JavaFX label styled with CSS, created with
+  ChatGPT/Codex assistance. The User Guide screenshot uses sample task data.
+  The generation prompt
+  is recorded in [the image notes](docs/avatar.md).
   The retired bot image was sourced from the
   [FairPrice NutriSoy product listing](https://www.fairprice.com.sg/product/f-n-nutrisoy-high-calcium-fresh-soya-milk-reduced-sugar-475ml-13053097);
   it and the user image of unknown origin were removed because reuse permission

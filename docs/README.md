@@ -10,8 +10,9 @@ keeping todos, deadlines, events, and tags in one local task list.
 
 ![The full NutriSoy window showing Soya, a completed tagged todo, a deadline, and an event](Ui.png)
 
-Screenshot rendered from NutriSoy on macOS using sample tasks. The S and You
-avatars are original JavaFX/CSS elements, created with AI assistance; see the
+Screenshot captured from NutriSoy on macOS using sample tasks. Soya's carton
+avatar was generated with OpenAI's image-generation tool; You is a JavaFX/CSS
+avatar. See the
 [acknowledgements](https://github.com/Eskalade/ip#acknowledgements).
 
 [Quick start](#quick-start) · [Commands](#command-reference) ·
