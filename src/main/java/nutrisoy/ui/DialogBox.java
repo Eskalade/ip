@@ -11,12 +11,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
- * Represents a chat message with a text avatar identifying the speaker.
+ * Represents a chat message with an avatar identifying the speaker.
  */
 public class DialogBox extends HBox {
+    /** Shared image data; each dialog uses its own ImageView node. */
+    private static final Image SOYA_AVATAR = new Image(
+            DialogBox.class.getResource("/images/soya-carton.png").toExternalForm(), 72, 72, true, true);
+
     @FXML
     private Label dialog;
     @FXML
@@ -36,6 +42,14 @@ public class DialogBox extends HBox {
         dialog.setText(text);
         avatar.setText(speaker);
         avatar.setAccessibleText(speaker.equals("S") ? "Soya" : "You");
+        if (speaker.equals("S")) {
+            ImageView picture = new ImageView(SOYA_AVATAR);
+            picture.setFitWidth(36);
+            picture.setFitHeight(36);
+            picture.setPreserveRatio(true);
+            avatar.setText(null);
+            avatar.setGraphic(picture);
+        }
         dialog.maxWidthProperty().bind(Bindings.min(widthProperty().multiply(0.76), 560));
     }
 
@@ -62,7 +76,7 @@ public class DialogBox extends HBox {
     }
 
     /**
-     * Creates a Soya response with an S avatar.
+     * Creates a Soya response with the generated soya-milk carton avatar.
      *
      * @param text response to display
      * @return app dialog box
